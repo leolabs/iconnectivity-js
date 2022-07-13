@@ -1,4 +1,5 @@
-import { buildCommandCode, Command, CommandType } from "../commands";
+import { Command } from "../commands";
+import { buildCommandCode, CommandType } from "./command-code";
 import { Data } from "./data";
 import { splitNumber } from "./number";
 

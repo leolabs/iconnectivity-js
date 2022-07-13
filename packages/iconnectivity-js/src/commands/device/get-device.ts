@@ -1,5 +1,5 @@
 import { DeviceCommand } from ".";
-import { sendCommand } from "..";
+import { CommandOptions, sendCommand } from "..";
 import { mergeNumber } from "../../util/number";
 
 export enum OperatingMode {
@@ -29,12 +29,10 @@ export interface RetDevice {
  * size that can be used for other commands.
  */
 export const getDevice = async (
-  output: WebMidi.MIDIOutput,
-  input: WebMidi.MIDIInput
+  params: CommandOptions
 ): Promise<RetDevice | null> => {
   const response = await sendCommand({
-    output,
-    input,
+    ...params,
     command: DeviceCommand.GetDevice,
   });
 
@@ -43,10 +41,10 @@ export const getDevice = async (
   }
 
   return {
-    productId: response.slice(0, 2),
-    serialNumber: response.slice(2, 7),
-    protocolVersion: response[14],
-    operatingMode: response[15],
-    maxDataLength: mergeNumber(response.slice(16, 18)),
+    productId: response.slice(5, 7),
+    serialNumber: response.slice(7, 9),
+    protocolVersion: response[19],
+    operatingMode: response[20],
+    maxDataLength: mergeNumber(response.slice(21, 23)),
   };
 };

@@ -7,18 +7,12 @@ export interface HardwareValueParams extends CommandOptions {
 
 /** This command is used to get the current value from a hardware interface element. */
 export const getHardwareValue = async ({
-  output,
-  input,
-  productId,
-  serialNumber,
   type,
+  ...params
 }: HardwareValueParams) => {
   const response = await sendCommand({
-    output,
-    input,
+    ...params,
     command: HardwareInterfaceCommand.GetHardwareValue,
-    productId,
-    serialNumber,
     data: [0x00, type],
   });
 
@@ -63,11 +57,11 @@ export const getAutomaticFailoverState = async (
   }
 
   return {
-    alarm: !!(response[17] & 2),
-    armed: !!(response[17] & 1),
-    mainAudioState: response[18],
-    mainMidiState: response[19],
-    backupAudioState: response[20],
-    backupMidiState: response[21],
+    alarm: !!(response[22] & 2),
+    armed: !!(response[22] & 1),
+    mainAudioState: response[23],
+    mainMidiState: response[24],
+    backupAudioState: response[25],
+    backupMidiState: response[26],
   };
 };

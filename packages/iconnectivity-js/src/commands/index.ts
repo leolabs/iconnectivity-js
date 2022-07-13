@@ -6,7 +6,7 @@ import {
   isValidMessage,
   MESSAGE_HEADER,
 } from "../util/message";
-import { mergeNumber, splitNumber } from "../util/number";
+import { mergeNumber } from "../util/number";
 import { DeviceCommand } from "./device";
 import { HardwareInterfaceCommand } from "./hardware-interface";
 
@@ -122,24 +122,12 @@ export type Command =
   | SnapshotCommand
   | HardwareInterfaceCommand;
 
-export enum CommandType {
-  Query = 0x40,
-  Answer = 0x00,
+export interface SendCommandOptions extends BodyParameters {
+  output: MIDIOutput;
+  input: MIDIInput;
 }
 
-/** Builds a two-byte command based on the command type and command */
-export const buildCommandCode = (type: CommandType, command: Command) =>
-  splitNumber((type << 7) + command);
-
-interface SendCommandOptions extends BodyParameters {
-  output: WebMidi.MIDIOutput;
-  input: WebMidi.MIDIInput;
-}
-
-export type CommandOptions = Omit<
-  SendCommandOptions,
-  "command" | "transactionId" | "data"
->;
+export type CommandOptions = Omit<SendCommandOptions, "command" | "data">;
 
 /** Sends a message to the given output and waits for a response */
 export const sendCommand = async ({
@@ -148,13 +136,13 @@ export const sendCommand = async ({
   command,
   productId,
   serialNumber,
-  transactionId,
+  transactionId = 0,
   data,
 }: SendCommandOptions) => {
   return await new Promise<Uint8Array>((res, rej) => {
     const timeout = setTimeout(() => rej(new Error("Timeout")), 100);
 
-    const handler = (m: WebMidi.MIDIMessageEvent) => {
+    const handler = (m: MIDIMessageEvent) => {
       if (!m.data.slice(0, 5).every((e, i) => MESSAGE_HEADER[i] === e)) {
         return;
       }
