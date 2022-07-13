@@ -44,7 +44,7 @@ export class iConnectivity {
 
           try {
             const device = new Connection(input, output);
-            const deviceInfo = await getDevice({ device, transactionId: 0 });
+            const deviceInfo = await getDevice({ device });
 
             if (deviceInfo) {
               return new Device(input, output, deviceInfo);
