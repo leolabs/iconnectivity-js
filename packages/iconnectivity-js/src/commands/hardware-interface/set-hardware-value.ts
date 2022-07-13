@@ -9,19 +9,13 @@ export interface SetHardwareValueParams extends CommandOptions {
 
 /** This command is used to get the current value from a hardware interface element. */
 export const setHardwareValue = async ({
-  output,
-  input,
-  productId,
-  serialNumber,
   type,
   data,
+  ...params
 }: SetHardwareValueParams) => {
   const response = await sendCommand({
-    output,
-    input,
+    ...params,
     command: HardwareInterfaceCommand.RetSetHardwareValue,
-    productId,
-    serialNumber,
     data: [0x01, type, ...data],
   });
 

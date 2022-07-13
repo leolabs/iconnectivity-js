@@ -1,12 +1,6 @@
-import { formatData } from "../util/data";
-import {
-  BodyParameters,
-  buildBody,
-  buildMessage,
-  isValidMessage,
-  MESSAGE_HEADER,
-} from "../util/message";
-import { MAX_NUMBER, mergeNumber } from "../util/number";
+import { Connectable } from "../connection";
+import { BodyParameters, buildBody, buildMessage } from "../util/message";
+import { MAX_NUMBER } from "../util/number";
 
 import { AdvancedMidiProcessorCommand } from "./advanced-midi-processor";
 import { AudioCommand } from "./audio";
@@ -29,8 +23,7 @@ export type Command =
   | HardwareInterfaceCommand;
 
 export interface SendCommandOptions extends BodyParameters {
-  output: MIDIOutput;
-  input: MIDIInput;
+  device: Connectable;
 }
 
 export type CommandOptions = Omit<SendCommandOptions, "command" | "data">;
@@ -49,47 +42,21 @@ const getNextTransactionId = () => {
 
 /** Sends a message to the given output and waits for a response. */
 export const sendCommand = async ({
-  output,
-  input,
+  device,
   command,
   productId,
   serialNumber,
   transactionId = getNextTransactionId(),
   data,
 }: SendCommandOptions) => {
-  return await new Promise<Uint8Array>((res, rej) => {
-    const timeout = setTimeout(() => rej(new Error("Timeout")), 100);
-
-    const handler = (m: MIDIMessageEvent) => {
-      if (!m.data.slice(0, 5).every((e, i) => MESSAGE_HEADER[i] === e)) {
-        return;
-      }
-
-      if (!isValidMessage(m.data)) {
-        console.warn("Invalid message received:", formatData(m.data));
-        return;
-      }
-
-      if (mergeNumber(m.data.slice(12, 14)) !== transactionId) {
-        return;
-      }
-
-      res(m.data);
-      clearTimeout(timeout);
-      input.removeEventListener("midimessage", handler as any);
-    };
-
-    input.addEventListener("midimessage", handler as any);
-
-    const body = buildBody({
-      command,
-      data,
-      productId,
-      serialNumber,
-      transactionId,
-    });
-
-    const message = buildMessage(body);
-    output.send(message);
+  const body = buildBody({
+    command,
+    data,
+    productId,
+    serialNumber,
+    transactionId,
   });
+
+  const message = buildMessage(body);
+  return await device.sendMessage(message);
 };

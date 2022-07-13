@@ -26,7 +26,7 @@ export enum DeviceCommand {
   RetSetUserData = 0x19,
 }
 
-export enum DeviceInfo {
+export enum DeviceInfoType {
   AccessoryName = 0x01,
   ManufacturerName = 0x02,
   ModelNumber = 0x03,

@@ -1,5 +1,7 @@
 import { DeviceCommand } from ".";
 import { CommandOptions, sendCommand } from "..";
+import { ProductID } from "../../types/product";
+import { Data } from "../../util/data";
 import { mergeNumber } from "../../util/number";
 
 export enum OperatingMode {
@@ -13,9 +15,9 @@ export enum OperatingMode {
  * with this device (e.g. protocol version number). A host should cache this
  * information and use it for all further communication with this device.
  */
-export interface RetDevice {
-  productId: Uint8Array;
-  serialNumber: Uint8Array;
+export interface DeviceInfo {
+  productId: ProductID;
+  serialNumber: Data;
   protocolVersion: number;
   operatingMode: OperatingMode;
   maxDataLength: number;
@@ -30,7 +32,7 @@ export interface RetDevice {
  */
 export const getDevice = async (
   params: CommandOptions
-): Promise<RetDevice | null> => {
+): Promise<DeviceInfo | null> => {
   const response = await sendCommand({
     ...params,
     command: DeviceCommand.GetDevice,
@@ -41,8 +43,8 @@ export const getDevice = async (
   }
 
   return {
-    productId: response.slice(5, 7),
-    serialNumber: response.slice(7, 9),
+    productId: response[6],
+    serialNumber: response.slice(7, 12),
     protocolVersion: response[19],
     operatingMode: response[20],
     maxDataLength: mergeNumber(response.slice(21, 23)),

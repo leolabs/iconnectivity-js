@@ -1,64 +1,62 @@
+import isEqual from "lodash/isEqual";
 import uniqBy from "lodash/uniqBy";
-import { sendCommand, SendCommandOptions } from "./commands";
-import { getDevice, OperatingMode } from "./commands/device/get-device";
+import { getDevice } from "./commands/device/get-device";
+import { Connection } from "./connection";
+import { Device } from "./device";
 import { isTruthy } from "./util/array";
-import { formatData } from "./util/data";
-import { MAX_NUMBER } from "./util/number";
+import { createEventSource } from "./util/event-source";
 
-/** Requests MIDI access and scans all ports for iConnectivity devices */
-export const getDevices = async () => {
-  const access = await navigator.requestMIDIAccess({ sysex: true });
+export class iConnectivity {
+  private devices: Device[] = [];
+  readonly devicesChanged = createEventSource<(devices: Device[]) => void>();
 
-  const inputs = [...access.inputs.values()];
-  const answers = await Promise.all(
-    [...access.outputs.values()]
-      .filter((o) => o.name?.includes("RSV"))
-      .map(async (output) => {
-        const input = inputs.find((input) => input.name === output.name);
-
-        if (!input) {
-          return null;
-        }
-
-        try {
-          const deviceInfo = await getDevice({ output, input });
-
-          if (deviceInfo) {
-            return { input, output, deviceInfo };
-          }
-        } catch (e) {}
-
-        return null;
-      })
-  );
-
-  const devices = uniqBy(answers.filter(isTruthy), (d) =>
-    d.deviceInfo.serialNumber.toString()
-  );
-
-  return devices;
-};
-
-export class Device {
-  constructor(public output: MIDIOutput, public input: MIDIInput) {}
-
-  private transactionId = 0;
-
-  /**
-   * Increases the transaction ID by 1 and returns it.
-   * If the transaction ID is greater than MAX_NUMBER, it wraps around to 0.
-   */
-  private getNextTransactionId() {
-    this.transactionId = (this.transactionId + 1) % MAX_NUMBER;
-    return this.transactionId;
+  constructor(public readonly midiAccess: MIDIAccess) {
+    midiAccess.addEventListener("statechange", this.handleMidiStateChange);
+    this.handleMidiStateChange();
   }
 
-  sendCommand(options: Omit<SendCommandOptions, "output" | "input">) {
-    return sendCommand({
-      ...options,
-      output: this.output,
-      input: this.input,
-      transactionId: this.getNextTransactionId(),
-    });
+  handleMidiStateChange = async (e?: Event) => {
+    const devices = await this.getDevices();
+
+    if (
+      !isEqual(
+        devices.map((d) => d.serialNumber),
+        this.devices.map((d) => d.serialNumber)
+      )
+    ) {
+      this.devices = devices;
+      this.devicesChanged.emit(devices);
+    }
+  };
+
+  /** Requests MIDI access and scans all ports for iConnectivity devices */
+  async getDevices() {
+    const inputs = [...this.midiAccess.inputs.values()];
+    const answers = await Promise.all(
+      [...this.midiAccess.outputs.values()]
+        .filter((o) => o.name?.includes("RSV"))
+        .map(async (output) => {
+          const input = inputs.find((input) => input.name === output.name);
+
+          if (!input) {
+            return null;
+          }
+
+          try {
+            const device = new Connection(input, output);
+            const deviceInfo = await getDevice({ device, transactionId: 0 });
+
+            if (deviceInfo) {
+              return new Device(input, output, deviceInfo);
+            }
+          } catch (e) {}
+
+          return null;
+        })
+    );
+
+    const devices = uniqBy(answers.filter(isTruthy), (d) => d.serialNumber);
+
+    return devices;
   }
 }

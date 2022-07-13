@@ -1,4 +1,5 @@
 import { Command } from "../commands";
+import { ProductID } from "../types/product";
 import { buildCommandCode, CommandType } from "./command-code";
 import { Data } from "./data";
 import { splitNumber } from "./number";
@@ -37,7 +38,7 @@ const buildChecksum = (sum: number) => ((~sum + 1) >>> 0) % 128;
 
 export interface BodyParameters {
   command: Command;
-  productId?: Data;
+  productId?: ProductID | Data;
   serialNumber?: Data;
   transactionId?: number;
   data?: Data;
@@ -51,6 +52,10 @@ export const buildBody = ({
   transactionId,
   data,
 }: BodyParameters) => {
+  if (typeof productId === "number") {
+    productId = splitNumber(productId);
+  }
+
   return [
     ...(productId ?? [0, 0]), // product ID, if set
     ...(serialNumber ?? [0, 0, 0, 0, 0]), // serial number, if set
