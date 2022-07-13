@@ -28,7 +28,7 @@ export const getCommandList = async (
   const commands: Command[] = [];
 
   for (let i = 0; i < length; i += 2) {
-    const start = 18 + i * 2;
+    const start = 18 + i;
     const end = start + 2;
     commands.push(mergeNumber(response.slice(start, end)));
   }

@@ -22,7 +22,9 @@ export const splitNumber = (input: number) => {
 /** Merges two bytes back into a number. */
 export const mergeNumber = (input: Data) => {
   if (input.length !== 2) {
-    throw new Error("Number must be two bytes long, but is " + input.length);
+    throw new Error(
+      "Number must be two bytes long, but is " + input.length + " bytes long"
+    );
   }
 
   return input[0] * 128 + input[1];

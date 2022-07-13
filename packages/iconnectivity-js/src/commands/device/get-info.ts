@@ -2,34 +2,29 @@ import { DeviceCommand, DeviceInfoType } from ".";
 import { CommandOptions, sendCommand } from "..";
 import { mergeNumber } from "../../util/number";
 
+interface GetInfoParams extends CommandOptions {
+  infoType: DeviceInfoType;
+}
+
 /**
  * This command is used to query a device about which info IDs it supports.
  */
-export const getInfoList = async (
-  params: CommandOptions
-): Promise<DeviceInfoType[] | null> => {
+export const getInfo = async ({
+  infoType,
+  ...params
+}: GetInfoParams): Promise<string | null> => {
   const response = await sendCommand({
     ...params,
-    command: DeviceCommand.GetInfoList,
+    command: DeviceCommand.GetInfo,
+    data: [infoType],
   });
 
   if (!response) {
     return null;
   }
 
-  const length = mergeNumber(response.slice(16, 18)) / 2;
+  const length = mergeNumber(response.slice(16, 18));
+  const result = response.slice(19, 19 + length - 1);
 
-  if (length % 2 !== 0) {
-    throw new Error(`Length should be even, but was ${length}`);
-  }
-
-  const infos: DeviceInfoType[] = [];
-
-  for (let i = 0; i < length; i += 2) {
-    const start = 18 + i * 2;
-    const end = start + 2;
-    infos.push(mergeNumber(response.slice(start, end)));
-  }
-
-  return infos;
+  return [...result].map((c) => String.fromCharCode(c)).join("");
 };

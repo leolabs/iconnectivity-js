@@ -1,6 +1,6 @@
 import { DeviceCommand } from ".";
 import { CommandOptions, sendCommand } from "..";
-import { ProductID } from "../../types/product";
+import { Product } from "../../types/product";
 import { Data } from "../../util/data";
 import { mergeNumber } from "../../util/number";
 
@@ -16,7 +16,7 @@ export enum OperatingMode {
  * information and use it for all further communication with this device.
  */
 export interface DeviceInfo {
-  productId: ProductID;
+  productId: Product;
   serialNumber: Data;
   protocolVersion: number;
   operatingMode: OperatingMode;

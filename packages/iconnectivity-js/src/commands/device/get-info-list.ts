@@ -26,9 +26,8 @@ export const getInfoList = async (
   const infos: DeviceInfoType[] = [];
 
   for (let i = 0; i < length; i += 2) {
-    const start = 18 + i * 2;
-    const end = start + 2;
-    infos.push(mergeNumber(response.slice(start, end)));
+    const start = 18 + i;
+    infos.push(response[start]);
   }
 
   return infos;
