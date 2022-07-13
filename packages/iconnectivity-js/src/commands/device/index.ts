@@ -25,3 +25,13 @@ export enum DeviceCommand {
   GetUserData = 0x18,
   RetSetUserData = 0x19,
 }
+
+export enum DeviceInfo {
+  AccessoryName = 0x01,
+  ManufacturerName = 0x02,
+  ModelNumber = 0x03,
+  SerialNumber = 0x04,
+  FirmwareVersion = 0x05,
+  HardwareVersion = 0x06,
+  DeviceName = 0x10,
+}
