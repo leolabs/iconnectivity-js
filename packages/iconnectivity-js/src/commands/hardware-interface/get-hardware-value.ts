@@ -43,7 +43,7 @@ export interface AutomaticFailoverState {
   backupMidiState: AudioMidiState;
 }
 
-/** Gets the state of the device's failover system */
+/** Gets the state of the device's failover system. */
 export const getAutomaticFailoverState = async (
   data: CommandOptions
 ): Promise<AutomaticFailoverState | null> => {

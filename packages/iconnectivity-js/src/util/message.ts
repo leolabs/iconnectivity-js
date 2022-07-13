@@ -20,7 +20,7 @@ import { splitNumber } from "./number";
 // Footer:
 // 0xF7 - end of system exclusive
 
-/** The header that is sent with every SysEx message */
+/** The header that is sent with every SysEx message. */
 export const MESSAGE_HEADER = [0xf0, 0x00, 0x01, 0x73, 0x7e];
 
 /**
@@ -43,7 +43,7 @@ export interface BodyParameters {
   data?: Data;
 }
 
-/** Builds the message body from the given parameters */
+/** Builds the message body from the given parameters. */
 export const buildBody = ({
   command,
   productId,
@@ -61,7 +61,7 @@ export const buildBody = ({
   ];
 };
 
-/** Builds a message based on the given body that conforms to iConnectivity's spec */
+/** Builds a message based on the given body that conforms to iConnectivity's spec. */
 export const buildMessage = (body: Data) => {
   const output = [...MESSAGE_HEADER, ...body];
   const bodySum = [...body].reduce((acc, cur) => (acc += cur));
@@ -69,7 +69,7 @@ export const buildMessage = (body: Data) => {
   return output;
 };
 
-/** Validates an incoming message */
+/** Validates an incoming message. */
 export const isValidMessage = (input: Data) => {
   const sum = [...input].slice(5, -1).reduce((acc, cur) => (acc += cur), 0);
   return buildChecksum(sum) === 0;

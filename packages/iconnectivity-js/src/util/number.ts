@@ -7,10 +7,10 @@ import { Data } from "./data";
 // contained in the 7 least significant bits of the last byte. The next 7 bits are contained in the 7
 // least significant bits of the last-1 byte, etc.
 
-/** The highest number that can be represented using two bytes */
+/** The highest number that can be represented using two bytes. */
 export const MAX_NUMBER = 16383;
 
-/** Splits a number into two bytes */
+/** Splits a number into two bytes. */
 export const splitNumber = (input: number) => {
   if (input > MAX_NUMBER) {
     throw new Error("Number can't be larger than 16383");
@@ -19,7 +19,7 @@ export const splitNumber = (input: number) => {
   return [(input >> 7) & 0x7f, input & 0x7f];
 };
 
-/** Merges two bytes back into a number */
+/** Merges two bytes back into a number. */
 export const mergeNumber = (input: Data) => {
   if (input.length !== 2) {
     throw new Error("Number must be two bytes long, but is " + input.length);

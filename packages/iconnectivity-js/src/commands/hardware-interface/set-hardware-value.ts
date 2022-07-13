@@ -37,7 +37,7 @@ export interface SetAutomaticFailoverStateParams extends CommandOptions {
   arm?: boolean;
 }
 
-/** Gets the state of the device's failover system */
+/** Sets the state of the device's failover system. */
 export const setAutomaticFailoverState = async ({
   alarm,
   arm,
