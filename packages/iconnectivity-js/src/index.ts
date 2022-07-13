@@ -1,5 +1,6 @@
 import isEqual from "lodash/isEqual";
 import uniqBy from "lodash/uniqBy";
+
 import { getDevice } from "./commands/device/get-device";
 import { Connection } from "./connection";
 import { Device } from "./device";
@@ -77,5 +78,24 @@ export class DeviceManager {
     const devices = uniqBy(answers.filter(isTruthy), (d) => d.serialNumber);
 
     return devices;
+  }
+
+  /**
+   * Waits for the first device(s) to be found and returns them.
+   * If devices are already found, this returns immediately.
+   */
+  async waitForDevices() {
+    if (this.devices.length) {
+      return this.devices;
+    } else {
+      return new Promise((resolve) => {
+        const unsubscribe = this.devicesChanged.addListener((devices) => {
+          if (devices.length) {
+            unsubscribe();
+            resolve(devices);
+          }
+        });
+      });
+    }
   }
 }
