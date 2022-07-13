@@ -15,7 +15,7 @@ export class Connection implements Connectable {
   /** Sends a message to the device and waits for a response. */
   sendMessage = async (message: Data) => {
     return await new Promise<Uint8Array>((res, rej) => {
-      const timeout = setTimeout(() => rej(new Error("Timeout")), 100);
+      const timeout = setTimeout(() => rej(new Error("Timeout")), 500);
 
       const handler = (m: MIDIMessageEvent) => {
         if (!m.data.slice(0, 5).every((e, i) => MESSAGE_HEADER[i] === e)) {
@@ -37,10 +37,22 @@ export class Connection implements Connectable {
         res(m.data);
         clearTimeout(timeout);
         this.input.removeEventListener("midimessage", handler as any);
+
+        console.log({
+          request: formatData(message),
+          response: formatData(m.data),
+          transactionId: mergeNumber(message.slice(12, 14)),
+        });
       };
 
       this.input.addEventListener("midimessage", handler as any);
-      this.output.send(message);
+
+      try {
+        this.output.send(message);
+      } catch (e) {
+        console.error("Sending message failed:", formatData(message));
+        throw e;
+      }
     });
   };
 }
