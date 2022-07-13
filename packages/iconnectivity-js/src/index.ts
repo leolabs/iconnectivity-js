@@ -3,15 +3,34 @@ import uniqBy from "lodash/uniqBy";
 import { getDevice } from "./commands/device/get-device";
 import { Connection } from "./connection";
 import { Device } from "./device";
+import { Product } from "./types/product";
 import { isTruthy } from "./util/array";
 import { createEventSource } from "./util/event-source";
 
-export class iConnectivity {
+/**
+ * The DeviceManager is responsible for discovering and managing iConnectivity
+ * devices. It automatically searches for and maintains a list of devices.
+ *
+ * To initialize the DeviceManager, you need to pass in a MIDIAccess object.
+ * You can obtain it by calling `navigator.requestMIDIAccess({ sysex: true })`.
+ */
+export class DeviceManager {
   private devices: Device[] = [];
   readonly devicesChanged = createEventSource<(devices: Device[]) => void>();
+  private _product: Product | undefined;
 
-  constructor(public readonly midiAccess: MIDIAccess) {
+  constructor(public readonly midiAccess: MIDIAccess, product?: Product) {
+    this._product = product;
     midiAccess.addEventListener("statechange", this.handleMidiStateChange);
+    this.handleMidiStateChange();
+  }
+
+  get product() {
+    return this._product;
+  }
+
+  set product(product: Product | undefined) {
+    this._product = product;
     this.handleMidiStateChange();
   }
 
