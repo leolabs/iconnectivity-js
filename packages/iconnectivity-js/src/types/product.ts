@@ -1,4 +1,4 @@
-export enum ProductID {
+export enum Product {
   /** iConnectMIDI (does not support the commands in this library) */
   MIDI = 0x01,
   /** mio10 */

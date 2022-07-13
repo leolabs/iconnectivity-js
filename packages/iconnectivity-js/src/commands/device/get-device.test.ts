@@ -1,4 +1,4 @@
-import { ProductID } from "../../types/product";
+import { Product } from "../../types/product";
 import { testMidiCommand } from "../../util/mock-connection";
 import { getDevice } from "./get-device";
 
@@ -13,7 +13,7 @@ describe("getDevice", () => {
       getDevice({ device, transactionId: 0 })
     );
 
-    expect(info?.productId).toBe(ProductID.PlayAUDIO12);
+    expect(info?.productId).toBe(Product.PlayAUDIO12);
     expect(info?.protocolVersion).toBe(1);
 
     expect(info).toMatchInlineSnapshot(`
