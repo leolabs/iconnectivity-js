@@ -1,0 +1,16 @@
+{
+  "name": "iconnectivity-js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "28.1.5",
+    "@types/webmidi": "2.0.6",
+    "jest": "28.1.3",
+    "typescript": "4.7.4",
+    "ts-jest": "28.0.5"
+  }
+}

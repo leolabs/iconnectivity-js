@@ -1,0 +1,12 @@
+{
+  "name": "iconnectivity-js-repo",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "prettier": "2.7.1"
+  }
+}
