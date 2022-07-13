@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "lib",
+    "declaration": true,
 
     /* Language and Environment */
     "target": "ES2020",
