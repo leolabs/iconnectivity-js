@@ -5,7 +5,8 @@ import {
   Device,
   Product,
   getAutomaticFailoverState,
-  HardwareInterfaceCommand,
+  getSnapshotList,
+  SnapshotType,
 } from "iconnectivity-js";
 
 const Component: React.FC = () => {
@@ -42,11 +43,16 @@ const Component: React.FC = () => {
       devices.map(async (device) => {
         const info = await device.getAllInfo();
         const failoverState = await getAutomaticFailoverState({ device });
+        const sceneSnapshot = await getSnapshotList({
+          device,
+          snapshotType: SnapshotType.Scene,
+        });
 
         return {
           serialNumber: device.serialNumber,
           info,
           failoverState,
+          sceneSnapshot,
           supportedCommands: device.getSupportedCommandNames(),
         };
       })
