@@ -1,4 +1,5 @@
 export enum SnapshotCommand {
+  GetSnapshotGlobalParm = 0x66,
   RetSnapshotGlobalParm = 0x67,
   GetSnapshotParm = 0x68,
   RetSetSnapshotParm = 0x69,
