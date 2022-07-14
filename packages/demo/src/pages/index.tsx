@@ -1,7 +1,12 @@
-import { DeviceManager } from "iconnectivity-js";
-import { Device } from "iconnectivity-js/lib/device";
-import { Product } from "iconnectivity-js/lib/types/product";
 import React, { useEffect, useRef, useState } from "react";
+
+import {
+  DeviceManager,
+  Device,
+  Product,
+  getAutomaticFailoverState,
+  HardwareInterfaceCommand,
+} from "iconnectivity-js";
 
 const Component: React.FC = () => {
   const managerRef = useRef<DeviceManager>();

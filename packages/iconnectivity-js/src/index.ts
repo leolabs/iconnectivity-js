@@ -9,6 +9,11 @@ import { Product } from "./types/product";
 import { isTruthy } from "./util/array";
 import { createEventSource } from "./util/event-source";
 
+export * from "./commands";
+export * from "./connection";
+export * from "./device";
+export * from "./types";
+
 /**
  * The DeviceManager is responsible for discovering and managing iConnectivity
  * devices. It automatically searches for and maintains a list of devices.

@@ -1,4 +1,5 @@
 import { Connectable } from "../connection";
+import { formatData } from "../util/data";
 import { BodyParameters, buildBody, buildMessage } from "../util/message";
 import { MAX_NUMBER } from "../util/number";
 
@@ -10,6 +11,15 @@ import { DeviceCommand } from "./device";
 import { HardwareInterfaceCommand } from "./hardware-interface";
 import { MidiCommand } from "./midi";
 import { SnapshotCommand } from "./snapshot";
+
+export * from "./advanced-midi-processor";
+export * from "./audio";
+export * from "./audio-mixer";
+export * from "./automation-control";
+export * from "./device";
+export * from "./hardware-interface";
+export * from "./midi";
+export * from "./snapshot";
 
 /** Represents the command ID that is sent to or from a device. */
 export type Command =

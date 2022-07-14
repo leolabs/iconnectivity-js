@@ -13,3 +13,6 @@ export enum HardwareInterfaceType {
   AutomaticFailover = 0x03,
   ToneGenerator = 0x04,
 }
+
+export * from "./get-hardware-value";
+export * from "./set-hardware-value";
