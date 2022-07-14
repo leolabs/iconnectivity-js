@@ -13,7 +13,7 @@ export const getHardwareValue = async ({
   const response = await sendCommand({
     ...params,
     command: HardwareInterfaceCommand.GetHardwareValue,
-    data: [0x00, type],
+    data: [type, 0x00],
   });
 
   if (!response) {
@@ -45,10 +45,10 @@ export interface AutomaticFailoverState {
 
 /** Gets the state of the device's failover system. */
 export const getAutomaticFailoverState = async (
-  data: CommandOptions
+  params: CommandOptions
 ): Promise<AutomaticFailoverState | null> => {
   const response = await getHardwareValue({
-    ...data,
+    ...params,
     type: HardwareInterfaceType.AutomaticFailover,
   });
 
