@@ -1,6 +1,6 @@
-import { Device } from "iconnectivity-js/src/device";
-import { DeviceManager } from "iconnectivity-js/src/index";
-import { Product } from "iconnectivity-js/src/types/product";
+import { DeviceManager } from "iconnectivity-js";
+import { Device } from "iconnectivity-js/lib/device";
+import { Product } from "iconnectivity-js/lib/types/product";
 import React, { useEffect, useRef, useState } from "react";
 
 const Component: React.FC = () => {
