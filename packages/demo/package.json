@@ -4,9 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "next dev"
+    "dev": "next dev",
+    "build": "next build && next export"
   },
   "dependencies": {
+    "iconnectivity-js": "*",
     "next": "12.2.2",
     "next-transpile-modules": "9.0.0",
     "react": "18.2.0",
