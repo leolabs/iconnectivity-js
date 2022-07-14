@@ -18,8 +18,7 @@ package.
 The easiest way to get started is using the `DeviceManager`. Here's an example:
 
 ```ts
-import { DeviceManager } from "iconnectivity-js";
-import { getAutomaticFailoverState } from "iconnectivity-js/lib/commands/hardware-interface/get-hardware-value";
+import { DeviceManager, getAutomaticFailoverState } from "iconnectivity-js";
 
 const example = async () => {
   // Request access to MIDI devices.
@@ -55,11 +54,12 @@ example();
 
 ## API Usage
 
-This is subject to change, but currently, functions can generally be imported
-from the `commands` directory. For example, to fetch the current failover state:
+This is subject to change, but currently, you can use some wrapper functions for
+some commands, with more coming in the future. For example, to fetch the current
+failover state:
 
 ```ts
-import { getAutomaticFailoverState } from "iconnectivity-js/lib/commands/hardware-interface/get-hardware-value";
+import { getAutomaticFailoverState } from "iconnectivity-js";
 
 // The device passed to this function could be
 // one of the devices found by the DeviceManager.
@@ -70,7 +70,7 @@ The `device` property doesn't necessarily need to be a device that the
 `DeviceManager` outputs. You could also set it to a `Connection` object:
 
 ```ts
-import { getAutomaticFailoverState } from "iconnectivity-js/lib/commands/hardware-interface/get-hardware-value";
+import { getAutomaticFailoverState } from "iconnectivity-js";
 
 const access = await navigator.requestMIDIAccess({ sysex: true });
 
@@ -83,6 +83,30 @@ const output = access.outputs.values()[0];
 const state = await getAutomaticFailoverState({
   device: new Connection(input, output),
 });
+```
+
+### Sending Raw Commands
+
+Even if a given command isn't wrapped by this library yet, you can still call it
+and parse the response yourself by using the `sendCommand` function. This
+function allows you to For example:
+
+```ts
+import { CommandOptions, mergeNumber, sendCommand } from "iconnectivity-js";
+
+/** Returns the number of MIDI ports the given device offers. */
+const getMidiPortCount = async (options: CommandOptions) => {
+  const result = await sendCommand({
+    ...options,
+    command: MidiCommand.GetMIDIInfo,
+  });
+
+  // The number of ports is stored in the
+  // 20th and 21st byte of the response.
+  return mergeNumber(result.slice(19, 21));
+};
+
+console.log("Port count:", await getMidiPortCount({ device }));
 ```
 
 ## Supported Devices
