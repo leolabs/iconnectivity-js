@@ -1,9 +1,11 @@
+import { Command } from "./commands";
 import { Data, formatData } from "./util/data";
 import { isValidMessage, MESSAGE_HEADER } from "./util/message";
 import { mergeNumber } from "./util/number";
 
 export interface Connectable {
   sendMessage: (message: Data) => Promise<Data>;
+  supportsCommand?: (command: Command) => boolean;
 }
 
 export class Connection implements Connectable {

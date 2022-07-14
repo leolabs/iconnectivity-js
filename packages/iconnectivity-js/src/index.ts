@@ -1,5 +1,6 @@
 import isEqual from "lodash/isEqual";
 import uniqBy from "lodash/uniqBy";
+import { getCommandList } from "./commands/device/get-command-list";
 
 import { getDevice } from "./commands/device/get-device";
 import { Connection } from "./connection";
@@ -67,7 +68,14 @@ export class DeviceManager {
             const deviceInfo = await getDevice({ device });
 
             if (deviceInfo) {
-              return new Device(input, output, deviceInfo);
+              const supportedCommands = await getCommandList({
+                device,
+                serialNumber: deviceInfo.serialNumber,
+              });
+
+              if (supportedCommands) {
+                return new Device(input, output, deviceInfo, supportedCommands);
+              }
             }
           } catch (e) {}
 

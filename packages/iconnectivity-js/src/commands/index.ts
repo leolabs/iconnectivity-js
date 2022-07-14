@@ -28,6 +28,18 @@ export interface SendCommandOptions extends BodyParameters {
 
 export type CommandOptions = Omit<SendCommandOptions, "command" | "data">;
 
+/** Returns a command name based on the given command code. */
+export const getCommandName = (command: Command) =>
+  DeviceCommand[command] ??
+  MidiCommand[command] ??
+  AudioCommand[command] ??
+  AudioMixerCommand[command] ??
+  AutomationControlCommand[command] ??
+  AdvancedMidiProcessorCommand[command] ??
+  SnapshotCommand[command] ??
+  HardwareInterfaceCommand[command] ??
+  `Unknown command 0x${command.toString(16)}`;
+
 /** The current transaction ID, increases with every sent command. */
 let transactionId = 0;
 
@@ -49,6 +61,12 @@ export const sendCommand = async ({
   transactionId = getNextTransactionId(),
   data,
 }: SendCommandOptions) => {
+  if (device.supportsCommand && !device.supportsCommand(command)) {
+    throw new Error(
+      `Device does not support command ${getCommandName(command)}`
+    );
+  }
+
   const body = buildBody({
     command,
     data,

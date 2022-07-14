@@ -10,13 +10,29 @@ export class Device extends Connection {
   constructor(
     public readonly input: MIDIInput,
     public readonly output: MIDIOutput,
-    public readonly info: DeviceInfo
+    public readonly info: DeviceInfo,
+    public readonly supportedCommands: Command[]
   ) {
     super(input, output);
   }
 
   get serialNumber() {
     return formatData(this.info.serialNumber);
+  }
+
+  supportsCommand(command: Command) {
+    if (
+      command === DeviceCommand.GetDevice ||
+      command === DeviceCommand.GetCommandList
+    ) {
+      return true;
+    }
+
+    return this.supportedCommands.includes(command);
+  }
+
+  getSupportedCommandNames() {
+    return this.supportedCommands.map((c) => getCommandName(c));
   }
 
   async getAllInfo() {
