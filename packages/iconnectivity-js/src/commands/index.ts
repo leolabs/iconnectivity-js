@@ -76,5 +76,17 @@ export const sendCommand = async ({
   });
 
   const message = buildMessage(body);
-  return await device.sendMessage(message);
+
+  try {
+    return await device.sendMessage(message);
+  } catch (e) {
+    console.error("Sending command failed:", {
+      error: e,
+      command: getCommandName(command),
+      data: formatData(data ?? []),
+      transactionId,
+      message: formatData(message),
+    });
+    throw e;
+  }
 };

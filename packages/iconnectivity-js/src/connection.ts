@@ -48,13 +48,7 @@ export class Connection implements Connectable {
       };
 
       this.input.addEventListener("midimessage", handler as any);
-
-      try {
-        this.output.send(message);
-      } catch (e) {
-        console.error("Sending message failed:", formatData(message));
-        throw e;
-      }
+      this.output.send(message);
     });
   };
 }
