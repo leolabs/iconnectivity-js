@@ -32,15 +32,11 @@ export interface DeviceInfo {
  */
 export const getDevice = async (
   params: CommandOptions
-): Promise<DeviceInfo | null> => {
+): Promise<DeviceInfo> => {
   const response = await sendCommand({
     ...params,
     command: DeviceCommand.GetDevice,
   });
-
-  if (!response) {
-    return null;
-  }
 
   return {
     productId: response[6],

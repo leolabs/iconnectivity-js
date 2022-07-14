@@ -13,17 +13,11 @@ export const setHardwareValue = async ({
   data,
   ...params
 }: SetHardwareValueParams) => {
-  const response = await sendCommand({
+  return await sendCommand({
     ...params,
     command: HardwareInterfaceCommand.RetSetHardwareValue,
     data: [0x01, type, ...data],
   });
-
-  if (!response) {
-    return null;
-  }
-
-  return response;
 };
 
 export interface SetAutomaticFailoverStateParams extends CommandOptions {
@@ -36,17 +30,15 @@ export const setAutomaticFailoverState = async ({
   alarm,
   arm,
   ...params
-}: SetAutomaticFailoverStateParams): Promise<Data | null> => {
+}: SetAutomaticFailoverStateParams) => {
   const valueFlags =
     (alarm !== undefined ? 2 : 0) + (arm !== undefined ? 1 : 0);
   const values = (alarm ? 2 : 0) + (arm ? 1 : 0);
   const data = [0x00, valueFlags, values];
 
-  const response = await setHardwareValue({
+  await setHardwareValue({
     ...params,
     type: HardwareInterfaceType.AutomaticFailover,
     data,
   });
-
-  return response;
 };

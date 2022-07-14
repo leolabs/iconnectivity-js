@@ -12,16 +12,12 @@ interface GetInfoParams extends CommandOptions {
 export const getInfo = async ({
   infoType,
   ...params
-}: GetInfoParams): Promise<string | null> => {
+}: GetInfoParams): Promise<string> => {
   const response = await sendCommand({
     ...params,
     command: DeviceCommand.GetInfo,
     data: [infoType],
   });
-
-  if (!response) {
-    return null;
-  }
 
   const length = mergeNumber(response.slice(16, 18));
   const result = response.slice(19, 19 + length - 1);

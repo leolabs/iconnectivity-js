@@ -10,17 +10,11 @@ export const getHardwareValue = async ({
   type,
   ...params
 }: HardwareValueParams) => {
-  const response = await sendCommand({
+  return await sendCommand({
     ...params,
     command: HardwareInterfaceCommand.GetHardwareValue,
     data: [type, 0x00],
   });
-
-  if (!response) {
-    return null;
-  }
-
-  return response;
 };
 
 export enum AudioMidiState {
@@ -46,15 +40,11 @@ export interface AutomaticFailoverState {
 /** Gets the state of the device's failover system. */
 export const getAutomaticFailoverState = async (
   params: CommandOptions
-): Promise<AutomaticFailoverState | null> => {
+): Promise<AutomaticFailoverState> => {
   const response = await getHardwareValue({
     ...params,
     type: HardwareInterfaceType.AutomaticFailover,
   });
-
-  if (!response) {
-    return null;
-  }
 
   return {
     alarm: !!(response[22] & 2),

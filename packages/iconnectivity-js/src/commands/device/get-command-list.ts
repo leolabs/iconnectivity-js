@@ -15,10 +15,6 @@ export const getCommandList = async (
     command: DeviceCommand.GetCommandList,
   });
 
-  if (!response) {
-    return null;
-  }
-
   const length = mergeNumber(response.slice(16, 18));
 
   if (length % 2 !== 0) {

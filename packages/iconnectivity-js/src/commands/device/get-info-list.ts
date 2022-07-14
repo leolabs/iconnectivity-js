@@ -7,15 +7,11 @@ import { mergeNumber } from "../../util/number";
  */
 export const getInfoList = async (
   params: CommandOptions
-): Promise<DeviceInfoType[] | null> => {
+): Promise<DeviceInfoType[]> => {
   const response = await sendCommand({
     ...params,
     command: DeviceCommand.GetInfoList,
   });
-
-  if (!response) {
-    return null;
-  }
 
   const length = mergeNumber(response.slice(16, 18));
 
