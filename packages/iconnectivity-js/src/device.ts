@@ -1,4 +1,5 @@
-import { DeviceInfoType } from "./commands/device";
+import { Command, getCommandName } from "./commands";
+import { DeviceCommand, DeviceInfoType } from "./commands/device";
 import { DeviceInfo } from "./commands/device/get-device";
 import { getInfo } from "./commands/device/get-info";
 import { getInfoList } from "./commands/device/get-info-list";

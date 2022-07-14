@@ -1,11 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import { DeviceManager } from "iconnectivity-js/src/index";
 import { Device } from "iconnectivity-js/src/device";
-import { getCommandList } from "iconnectivity-js/src/commands/device/get-command-list";
-import { getInfoList } from "iconnectivity-js/src/commands/device/get-info-list";
-import { getInfo } from "iconnectivity-js/src/commands/device/get-info";
+import { DeviceManager } from "iconnectivity-js/src/index";
 import { Product } from "iconnectivity-js/src/types/product";
-import { DeviceInfoType } from "iconnectivity-js/src/commands/device";
+import React, { useEffect, useRef, useState } from "react";
 
 const Component: React.FC = () => {
   const managerRef = useRef<DeviceManager>();
@@ -29,12 +25,11 @@ const Component: React.FC = () => {
   useEffect(() => {
     Promise.all(
       devices.map(async (device) => {
-        const supportedCommands = await getCommandList({ device });
         const info = await device.getAllInfo();
 
         return {
           serialNumber: device.serialNumber,
-          supportedCommands,
+          supportedCommands: device.getSupportedCommandNames(),
           info,
         };
       })
