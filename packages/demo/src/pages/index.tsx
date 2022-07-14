@@ -36,10 +36,12 @@ const Component: React.FC = () => {
     Promise.all(
       devices.map(async (device) => {
         const info = await device.getAllInfo();
+        const failoverState = await getAutomaticFailoverState({ device });
 
         return {
           serialNumber: device.serialNumber,
           info,
+          failoverState,
           supportedCommands: device.getSupportedCommandNames(),
         };
       })
