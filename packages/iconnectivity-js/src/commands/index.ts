@@ -7,7 +7,7 @@ import { AdvancedMidiProcessorCommand } from "./advanced-midi-processor";
 import { AudioCommand } from "./audio";
 import { AudioMixerCommand } from "./audio-mixer";
 import { AutomationControlCommand } from "./automation-control";
-import { DeviceCommand } from "./device";
+import { DeviceCommand, ErrorCode } from "./device";
 import { HardwareInterfaceCommand } from "./hardware-interface";
 import { MidiCommand } from "./midi";
 import { SnapshotCommand } from "./snapshot";
@@ -88,7 +88,21 @@ export const sendCommand = async ({
   const message = buildMessage(body);
 
   try {
-    return await device.sendMessage(message);
+    const result = await device.sendMessage(message);
+
+    if (result[15] === DeviceCommand.ACK) {
+      const code = result[20] as ErrorCode;
+
+      if (code !== ErrorCode.NoError) {
+        throw new Error(
+          `Command failed with error code ${formatData([code])} (${
+            ErrorCode[code]
+          })`
+        );
+      }
+    }
+
+    return result;
   } catch (e) {
     console.error("Sending command failed:", {
       error: e,

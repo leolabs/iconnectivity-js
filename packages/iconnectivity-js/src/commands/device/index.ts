@@ -36,6 +36,7 @@ export enum DeviceInfoType {
   DeviceName = 0x10,
 }
 
+export * from "./ack";
 export * from "./get-command-list";
 export * from "./get-device";
 export * from "./get-info-list";
