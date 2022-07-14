@@ -19,6 +19,7 @@ The easiest way to get started is using the `DeviceManager`. Here's an example:
 
 ```ts
 import { DeviceManager } from "iconnectivity-js";
+import { getAutomaticFailoverState } from "iconnectivity-js/lib/commands/hardware-interface/get-hardware-value";
 
 const example = async () => {
   // Request access to MIDI devices.
@@ -42,6 +43,11 @@ const example = async () => {
     info: device.info,
     extendedInfo: await device.getAllInfo(),
   });
+
+  // If the device is a PlayAUDIO12,
+  // we can get the current failover state.
+  const failoverState = await getAutomaticFailoverState({ device });
+  console.log({ failoverState });
 };
 
 example();
