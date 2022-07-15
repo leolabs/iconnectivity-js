@@ -13,6 +13,7 @@ import {
   getAutomaticFailoverState,
   MeterValue,
   Product,
+  setAutomaticFailoverState,
 } from "iconnectivity-js";
 
 const StateButton = styled.button({
@@ -205,6 +206,16 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
                 ? "green"
                 : "gray"
             }
+            onClick={() => {
+              if (failoverState.alarm) {
+                setAutomaticFailoverState({ device, alarm: false });
+              } else {
+                setAutomaticFailoverState({
+                  device,
+                  arm: !failoverState.armed,
+                });
+              }
+            }}
           >
             {failoverState.alarm
               ? "Alarm"
