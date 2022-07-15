@@ -1,5 +1,5 @@
 import { Connectable } from "../connection";
-import { formatData } from "../util/data";
+import { Data, formatData } from "../util/data";
 import { BodyParameters, buildBody, buildMessage } from "../util/message";
 import { MAX_NUMBER } from "../util/number";
 
@@ -113,4 +113,9 @@ export const sendCommand = async ({
     });
     throw e;
   }
+};
+
+/** Returns the part of the response that contains the data */
+export const getResponseBody = (response: Data) => {
+  return response.slice(18, response.length - 2);
 };
