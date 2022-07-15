@@ -21,4 +21,5 @@ export enum AudioCommand {
   RetAudioPortMeterValue = 0x3f,
 }
 
+export * from "./get-audio-global-parm";
 export * from "./get-audio-port-meter-value";

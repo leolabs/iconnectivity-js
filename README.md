@@ -172,7 +172,7 @@ PR.
 
 ### Audio Commands (V2)
 
-- [ ] GetAudioGlobalParm
+- [x] GetAudioGlobalParm
 - [ ] SetAudioGlobalParm
 - [ ] GetAudioPortParm
 - [ ] SetAudioPortParm
