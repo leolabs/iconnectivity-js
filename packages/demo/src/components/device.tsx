@@ -95,8 +95,6 @@ const Meter: FC<{ value: MeterValue; kind: string }> = ({ value, kind }) => {
   );
 };
 
-const MemoMeter = memo(Meter);
-
 const Meters: FC<{ meterValues: MeterValue[]; kind: string }> = ({
   meterValues,
   kind,
@@ -107,13 +105,11 @@ const Meters: FC<{ meterValues: MeterValue[]; kind: string }> = ({
       css={{ flexGrow: meterValues.length }}
     >
       {meterValues.map((ch, i) => (
-        <MemoMeter key={i} value={ch} kind={kind} />
+        <Meter key={i} value={ch} kind={kind} />
       ))}
     </div>
   );
 };
-
-const MemoMeters = memo(Meters, isEqual);
 
 export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
   const [info, setInfo] = useState<Record<DeviceInfoType, string>>();
@@ -223,10 +219,10 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
         meters.map((channels, i) => (
           <div key={i} tw="flex gap-3">
             {channels.inputs.length > 0 && (
-              <MemoMeters meterValues={channels.inputs} kind="In" />
+              <Meters meterValues={channels.inputs} kind="In" />
             )}
             {channels.outputs.length > 0 && (
-              <MemoMeters meterValues={channels.outputs} kind="Out" />
+              <Meters meterValues={channels.outputs} kind="Out" />
             )}
           </div>
         ))}
