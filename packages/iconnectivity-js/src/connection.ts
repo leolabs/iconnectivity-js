@@ -11,8 +11,6 @@ export interface SendMessageOptions {
 export interface Connectable {
   /** The device's serial number, used to send commands to a specific device. */
   serialNumber?: Data;
-  /** Returns whether the device supports a given command. */
-  supportsCommand?: (command: Command) => boolean;
   /** Sends a raw MIDI message to the device and returns the raw response data. */
   sendMessage: (message: Data, options: SendMessageOptions) => Promise<Data>;
 }

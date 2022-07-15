@@ -68,14 +68,7 @@ export class DeviceManager {
             const deviceInfo = await getDevice({ device });
 
             if (deviceInfo) {
-              const supportedCommands = await getCommandList({
-                device,
-                serialNumber: deviceInfo.serialNumber,
-              });
-
-              if (supportedCommands) {
-                return new Device(input, output, deviceInfo, supportedCommands);
-              }
+              return new Device(input, output, deviceInfo);
             }
           } catch (e) {}
 

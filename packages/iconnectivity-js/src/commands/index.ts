@@ -76,15 +76,6 @@ export const sendCommand = async ({
   data,
   debug,
 }: SendCommandOptions) => {
-  if (
-    device.supportsCommand &&
-    !device.supportsCommand(COMMAND_MAP.get(command) ?? command)
-  ) {
-    throw new Error(
-      `Device does not support command ${getCommandName(command)}`
-    );
-  }
-
   const body = buildBody({
     command,
     data,
