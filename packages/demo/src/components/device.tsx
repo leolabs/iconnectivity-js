@@ -14,9 +14,6 @@ import {
   MeterValue,
   Product,
 } from "iconnectivity-js";
-import * as iconnectivity from "iconnectivity-js";
-
-console.log(iconnectivity, getAllInfo);
 
 const StateButton = styled.button({
   ...tw`rounded py-1 px-3 cursor-pointer tabular-nums whitespace-nowrap`,
