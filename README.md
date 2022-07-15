@@ -126,6 +126,11 @@ console.log("Port count:", await getMidiPortCount({ device }));
 
 ## Commands
 
+This list contains all commands currently documented by iConnectivity. The ones
+that already have a wrapper function are checked. If you want to contribute to
+this list by writing wrapper functions for more commands, feel free to open a
+PR.
+
 ### Device Commands
 
 - [x] GetDevice
