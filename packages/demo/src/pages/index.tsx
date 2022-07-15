@@ -50,7 +50,7 @@ const Component: React.FC = () => {
       {error ? (
         <Message tw="bg-red-900">{error}</Message>
       ) : devices.length ? (
-        <div tw="space-x-4">
+        <div tw="space-x-4 w-full">
           {devices.map((d) => (
             <DeviceEntry device={d} key={d.serialNumber} />
           ))}
