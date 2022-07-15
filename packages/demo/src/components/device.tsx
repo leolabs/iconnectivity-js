@@ -95,7 +95,7 @@ const Meter: FC<{ value: MeterValue; kind: string }> = ({ value, kind }) => {
   );
 };
 
-const MemoMeter = memo(Meter, isEqual);
+const MemoMeter = memo(Meter);
 
 const Meters: FC<{ meterValues: MeterValue[]; kind: string }> = ({
   meterValues,
