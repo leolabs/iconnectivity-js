@@ -1,5 +1,6 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, memo, useEffect, useRef, useState } from "react";
 import tw, { styled } from "twin.macro";
+import { isEqual } from "lodash";
 import {
   AudioGlobalParm,
   AudioPortMeterValue,
@@ -10,10 +11,8 @@ import {
   getAudioGlobalParm,
   getAudioPortMeterValue,
   getAutomaticFailoverState,
-  getSnapshotList,
   MeterValue,
   Product,
-  SnapshotType,
 } from "iconnectivity-js";
 
 const StateButton = styled.button({
@@ -96,6 +95,8 @@ const Meter: FC<{ value: MeterValue; kind: string }> = ({ value, kind }) => {
   );
 };
 
+const MemoMeter = memo(Meter, isEqual);
+
 const Meters: FC<{ meterValues: MeterValue[]; kind: string }> = ({
   meterValues,
   kind,
@@ -106,11 +107,13 @@ const Meters: FC<{ meterValues: MeterValue[]; kind: string }> = ({
       css={{ flexGrow: meterValues.length }}
     >
       {meterValues.map((ch, i) => (
-        <Meter key={i} value={ch} kind={kind} />
+        <MemoMeter key={i} value={ch} kind={kind} />
       ))}
     </div>
   );
 };
+
+const MemoMeters = memo(Meters, isEqual);
 
 export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
   const [info, setInfo] = useState<Record<DeviceInfoType, string>>();
@@ -220,10 +223,10 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
         meters.map((channels, i) => (
           <div key={i} tw="flex gap-3">
             {channels.inputs.length > 0 && (
-              <Meters meterValues={channels.inputs} kind="In" />
+              <MemoMeters meterValues={channels.inputs} kind="In" />
             )}
             {channels.outputs.length > 0 && (
-              <Meters meterValues={channels.outputs} kind="Out" />
+              <MemoMeters meterValues={channels.outputs} kind="Out" />
             )}
           </div>
         ))}
