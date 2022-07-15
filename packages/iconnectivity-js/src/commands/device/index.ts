@@ -35,10 +35,3 @@ export enum DeviceInfoType {
   HardwareVersion = 0x06,
   DeviceName = 0x10,
 }
-
-export * from "./ack";
-export * from "./extras";
-export * from "./get-command-list";
-export * from "./get-device";
-export * from "./get-info-list";
-export * from "./get-info";

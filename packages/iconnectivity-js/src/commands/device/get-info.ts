@@ -2,7 +2,7 @@ import { DeviceCommand, DeviceInfoType } from ".";
 import { CommandOptions, sendCommand } from "..";
 import { mergeNumber } from "../../util/number";
 
-interface GetInfoParams extends CommandOptions {
+export interface GetInfoParams extends CommandOptions {
   infoType: DeviceInfoType;
 }
 

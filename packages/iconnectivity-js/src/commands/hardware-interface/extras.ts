@@ -36,12 +36,12 @@ export const getAutomaticFailoverState = async (
   });
 
   return {
-    alarm: !!(response[6] & 2),
-    armed: !!(response[6] & 1),
-    mainAudioState: response[7],
-    mainMidiState: response[8],
-    backupAudioState: response[9],
-    backupMidiState: response[10],
+    alarm: !!(response[4] & 2),
+    armed: !!(response[4] & 1),
+    mainAudioState: response[5],
+    mainMidiState: response[6],
+    backupAudioState: response[7],
+    backupMidiState: response[8],
   };
 };
 

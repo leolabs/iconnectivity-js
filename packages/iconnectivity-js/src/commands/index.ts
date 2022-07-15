@@ -7,19 +7,11 @@ import { AdvancedMidiProcessorCommand } from "./advanced-midi-processor";
 import { AudioCommand } from "./audio";
 import { AudioMixerCommand } from "./audio-mixer";
 import { AutomationControlCommand } from "./automation-control";
-import { DeviceCommand, ErrorCode } from "./device";
+import { DeviceCommand } from "./device";
+import { ErrorCode } from "./device/ack";
 import { HardwareInterfaceCommand } from "./hardware-interface";
 import { MidiCommand } from "./midi";
 import { SnapshotCommand } from "./snapshot";
-
-export * from "./advanced-midi-processor";
-export * from "./audio";
-export * from "./audio-mixer";
-export * from "./automation-control";
-export * from "./device";
-export * from "./hardware-interface";
-export * from "./midi";
-export * from "./snapshot";
 
 /** Represents the command ID that is sent to or from a device. */
 export type Command =
@@ -135,3 +127,35 @@ export const sendCommand = async ({
 export const getResponseBody = (response: Data) => {
   return response.slice(18, response.length - 2);
 };
+
+// ===== EXPORTS OF COMMANDS =====
+
+export * from "./advanced-midi-processor";
+
+export * from "./audio";
+export * from "./audio/get-audio-global-parm";
+export * from "./audio/get-audio-port-meter-value";
+
+export * from "./audio-mixer";
+
+export * from "./automation-control";
+
+export * from "./device";
+export * from "./device/ack";
+export * from "./device/extras";
+export * from "./device/get-command-list";
+export * from "./device/get-device";
+export * from "./device/get-info-list";
+export * from "./device/get-info";
+
+export * from "./hardware-interface";
+export * from "./hardware-interface/extras";
+export * from "./hardware-interface/get-hardware-value";
+export * from "./hardware-interface/set-hardware-value";
+
+export * from "./midi";
+
+export * from "./snapshot";
+export * from "./snapshot/extras";
+export * from "./snapshot/apply-snapshot";
+export * from "./snapshot/get-snapshot-list";
