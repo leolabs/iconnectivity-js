@@ -1,6 +1,7 @@
 import { CommandOptions, sendCommand } from "..";
 import { HardwareInterfaceCommand, HardwareInterfaceType } from ".";
 import { Data } from "../../util/data";
+import { makeBitmap } from "../../util/bitmap";
 
 export interface SetHardwareValueParams extends CommandOptions {
   type: HardwareInterfaceType;
@@ -31,9 +32,8 @@ export const setAutomaticFailoverState = async ({
   arm,
   ...params
 }: SetAutomaticFailoverStateParams) => {
-  const valueFlags =
-    (alarm !== undefined ? 2 : 0) + (arm !== undefined ? 1 : 0);
-  const values = (alarm ? 2 : 0) + (arm ? 1 : 0);
+  const valueFlags = makeBitmap(alarm !== undefined, arm !== undefined);
+  const values = makeBitmap(alarm, arm);
   const data = [0x00, valueFlags, values];
 
   await setHardwareValue({
