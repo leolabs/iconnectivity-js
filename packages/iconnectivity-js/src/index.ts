@@ -105,6 +105,8 @@ export class DeviceManager {
 }
 
 export * from "./commands";
+export * from "./types";
+export * from "./util";
+
 export * from "./connection";
 export * from "./device";
-export * from "./types";
