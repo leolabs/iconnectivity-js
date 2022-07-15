@@ -45,7 +45,7 @@ const Component: React.FC = () => {
   }, []);
 
   return (
-    <div tw="p-4 flex flex-col items-center mx-auto max-w-4xl">
+    <div tw="p-4 flex flex-col items-center mx-auto max-w-6xl">
       <h2 tw="text-3xl text-center my-10">iConnectivity Devices</h2>
       {error ? (
         <Message tw="bg-red-900">{error}</Message>
