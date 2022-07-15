@@ -123,3 +123,122 @@ console.log("Port count:", await getMidiPortCount({ device }));
 - PlayAUDIO12
 - ConnectAUDIO2
 - ConnectAUDIO4
+
+## Commands
+
+### Device Commands
+
+- [x] GetDevice
+- [x] GetCommandList
+- [x] GetInfoList
+- [x] GetInfo
+- [] SetInfo
+- [] GetResetList
+- [] GetSaveRestoreList
+- [] GetEthernetPortInfo
+- [] SetEthernetPortInfo
+- [] Reset
+- [] SaveRestore
+- [] GetGizmoCount
+- [] GetGizmoInfo
+- [] GetDeviceMode
+- [] SetDeviceMode
+- [] GetUserData
+- [] SetUserData
+
+### MIDI Commands
+
+- [] GetMIDIInfo
+- [] SetMIDIInfo
+- [] GetMIDIPortInfo
+- [] SetMIDIPortInfo
+- [] GetMIDIPortFilter
+- [] SetMIDIPortFilter
+- [] GetMIDIPortRemap
+- [] SetMIDIPortRemap
+- [] GetMIDIPortRoute
+- [] SetMIDIPortRoute
+- [] GetMIDIPortDetail
+- [] SetMIDIPortDetail
+- [] GetRTPMIDIConnectionDetail
+- [] GetUSBHostMIDIDeviceDetail
+- [] GetMIDIMonitor
+- [] GetRTPMIDIConnectionParm
+
+### Audio Commands (V2)
+
+- [] GetAudioGlobalParm
+- [] SetAudioGlobalParm
+- [] GetAudioPortParm
+- [] SetAudioPortParm
+- [] GetAudioDeviceParm
+- [] SetAudioDeviceParm
+- [] GetAudioControlParm
+- [] SetAudioControlParm
+- [] GetAudioControlDetail
+- [] GetAudioControlDetailValue
+- [] SetAudioControlDetailValue
+- [] GetAudioClockParm
+- [] SetAudioClockParm
+- [] GetAudioPatchbayParm
+- [] SetAudioPatchbayParm
+- [] GetAudioChannelName
+- [] SetAudioChannelName
+- [x] GetAudioPortMeterValue
+
+### Audio Mixer Commands
+
+- [] GetMixerParm
+- [] SetMixerParm
+- [] GetMixerPortParm
+- [] SetMixerPortParm
+- [] GetMixerInputParm
+- [] SetMixerInputParm
+- [] GetMixerOutputParm
+- [] SetMixerOutputParm
+- [] GetMixerInputControl
+- [] GetMixerOutputControl
+- [] GetMixerInputControlValue
+- [] SetMixerInputControlValue
+- [] GetMixerOutputControlValue
+- [] SetMixerOutputControlValue
+- [] GetMixerMeterValue
+
+### Automation Control Commands
+
+- [] GetAutomationControl
+- [] GetAutomationControlDetail
+- [] SetAutomationControlDetail
+
+### Advanced MIDI Processor (AMP) Commands
+
+- [] GetAMPGlobalParm
+- [] GetAMPAlgorithmParm
+- [] SetAMPAlgorithmParm
+- [] GetAMPOperatorParm
+- [] SetAMPOperatorParm
+- [] GetAMPCustomRoute
+- [] SetAMPCustomRoute
+- [] GetAMPLookupTable
+- [] SetAMPLookupTable
+- [] GetAMPPortInfo
+- [] SetAMPPortInfo
+
+### Snapshot Commands
+
+- [] GetSnapshotGlobalParm
+- [] GetSnapshotParm
+- [] SetSnapshotParm
+- [x] GetSnapshotList
+- [] SetSnapshotList
+- [] CreateSnapshot
+- [] ApplySnapshot
+- [] ApplySnapshotList
+
+### Hardware Interface Commands
+
+- [] GetHardwareGlobalParm
+- [] GetHardwareParm
+- [] SetHardwareParm
+- [x] GetHardwareValue
+- [x] SetHardwareValue
