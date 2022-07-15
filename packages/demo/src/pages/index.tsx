@@ -1,8 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import "twin.macro";
+import tw, { styled } from "twin.macro";
 
 import { DeviceManager, Device } from "iconnectivity-js";
 import { DeviceEntry } from "../components/device";
+
+const Footer = styled.footer({
+  ...tw`mt-4 text-gray-400 text-center`,
+
+  a: {
+    ...tw`hover:text-gray-300`,
+  },
+});
 
 const Component: React.FC = () => {
   const managerRef = useRef<DeviceManager>();
@@ -50,10 +58,11 @@ const Component: React.FC = () => {
           Connect a device to view its details here.
         </p>
       )}
-      <p tw="text-center mt-4 text-gray-400">
+      <Footer>
         Made by <a href="https://leolabs.org">Léo Bernard</a> |{" "}
-        <a href="https://github.com/leolabs/iconnectivity-js">GitHub</a>
-      </p>
+        <a href="https://github.com/leolabs/iconnectivity-js">GitHub</a> |{" "}
+        <a href="https://npmjs.com/package/iconnectivity-js">NPM</a>
+      </Footer>
     </div>
   );
 };
