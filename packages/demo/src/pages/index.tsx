@@ -38,7 +38,7 @@ const Component: React.FC = () => {
 
     navigator.requestMIDIAccess({ sysex: true }).then((access) => {
       const manager = new DeviceManager(access);
-      (window as any).manager = manager;
+      (window as any).deviceManager = manager;
       unsubscribe = manager.devicesChanged.addListener((d) => setDevices(d));
       managerRef.current = manager;
     });
