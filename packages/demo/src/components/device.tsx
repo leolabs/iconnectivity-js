@@ -1,8 +1,11 @@
 import { FC, useEffect, useState } from "react";
 import tw, { styled } from "twin.macro";
 import {
+  AudioGlobalParm,
+  AudioPortMeterValue,
   Device,
   DeviceInfoType,
+  getAudioGlobalParm,
   getAudioPortMeterValue,
   getAutomaticFailoverState,
   getSnapshotList,
@@ -34,6 +37,31 @@ const StateButton = styled.button({
   },
 });
 
+const Meters: FC<{ meterValues: MeterValue[]; kind: string }> = ({
+  meterValues,
+  kind,
+}) => {
+  return (
+    <div
+      tw="mt-4 flex gap-1 h-64 overflow-hidden rounded"
+      css={{ flexGrow: meterValues.length }}
+    >
+      {meterValues.map((ch, i) => (
+        <div tw="relative flex-1 bg-gray-700 overflow-hidden" key={i}>
+          <span tw="absolute inset-0 pt-1 text-center text-gray-600">
+            {kind} {ch.channel}
+          </span>
+          <div
+            tw="absolute bottom-0 w-full bg-green-600 transition"
+            css={{ transitionProperty: "height" }}
+            style={{ height: `${ch.valueRaw / 81.92}%` }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+
 export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
   const [info, setInfo] = useState<Record<DeviceInfoType, string>>();
   const [scene, setScene] = useState<number>();
@@ -41,10 +69,12 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
     armed: boolean;
     alarm: boolean;
   }>();
-  const [meters, setMeters] = useState<MeterValue[][]>();
+  const [meters, setMeters] = useState<AudioPortMeterValue[]>();
+  const [audioInfo, setAudioInfo] = useState<AudioGlobalParm>();
 
   useEffect(() => {
     device.getAllInfo().then(setInfo);
+    getAudioGlobalParm({ device }).then(setAudioInfo);
   }, [device]);
 
   useEffect(() => {
@@ -66,18 +96,29 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
   }, [device]);
 
   useEffect(() => {
+    if (!audioInfo) {
+      return;
+    }
+
     const interval = setInterval(() => {
       Promise.all(
-        [1, 2].map(async (portId) =>
-          getAudioPortMeterValue({ device, portId, fetchInputs: true })
-        )
+        Array(audioInfo.audioPortCount)
+          .fill(0)
+          .map(async (_, i) =>
+            getAudioPortMeterValue({
+              device,
+              portId: i + 1,
+              fetchInputs: true,
+              fetchOutputs: true,
+            })
+          )
       )
-        .then((results) => setMeters(results.map((r) => r.inputs)))
+        .then((results) => setMeters(results))
         .catch(() => {});
     }, 50);
 
     return () => clearInterval(interval);
-  }, [device]);
+  }, [device, audioInfo]);
 
   if (!info) {
     return null;
@@ -121,19 +162,13 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
 
       {meters &&
         meters.map((channels, i) => (
-          <div key={i} tw="mt-4 flex gap-1 h-64 overflow-hidden rounded">
-            {channels.map((ch) => (
-              <div tw="relative flex-1 bg-gray-700">
-                <span tw="absolute inset-0 pt-1 text-center text-gray-600">
-                  {ch.channel}
-                </span>
-                <div
-                  tw="absolute bottom-0 w-full bg-green-600 transition"
-                  css={{ transitionProperty: "height" }}
-                  style={{ height: `${ch.valueRaw / 81.92}%` }}
-                />
-              </div>
-            ))}
+          <div key={i} tw="flex gap-4">
+            {channels.inputs.length > 0 && (
+              <Meters meterValues={channels.inputs} kind="In" />
+            )}
+            {channels.outputs.length > 0 && (
+              <Meters meterValues={channels.outputs} kind="Out" />
+            )}
           </div>
         ))}
     </div>
