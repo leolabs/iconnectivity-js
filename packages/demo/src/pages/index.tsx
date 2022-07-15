@@ -3,6 +3,7 @@ import tw, { styled } from "twin.macro";
 
 import { DeviceManager, Device } from "iconnectivity-js";
 import { DeviceEntry } from "../components/device";
+import Head from "next/head";
 
 const Footer = styled.footer({
   ...tw`mt-4 text-gray-400 text-center`,
@@ -47,6 +48,16 @@ const Component: React.FC = () => {
 
   return (
     <div tw="p-4 flex flex-col items-center mx-auto max-w-6xl">
+      <Head>
+        <title>
+          {devices.length
+            ? `${devices.length} device${
+                devices.length !== 1 ? "s" : ""
+              } connected – iConnectivity JS Demo`
+            : `iConnectivity JS Demo`}
+        </title>
+      </Head>
+
       <h2 tw="text-3xl text-center my-10">iConnectivity Devices</h2>
       {error ? (
         <Message tw="bg-red-900">{error}</Message>
