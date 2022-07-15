@@ -1,5 +1,8 @@
 # iConnectivity JS
 
+[View the Live Demo](https://icjs.leolabs.org) |
+[NPM](https://npmjs.com/package/iconnectivity-js)
+
 This library allows you to communicate with
 [iConnectivity](https://iconnectivity.com) devices using JS and the
 [Web MIDI API](https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API).
