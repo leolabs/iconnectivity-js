@@ -2,24 +2,26 @@ import { Command, getCommandName } from "./commands";
 import { DeviceCommand } from "./commands/device";
 import { DeviceInfo } from "./commands/device/get-device";
 import { Connection } from "./connection";
-import { formatData } from "./util/data";
+import { Data, formatData } from "./util/data";
 
 /** Represents an iConnectivity device with a MIDI input and output */
 export class Device extends Connection {
   private supportedCommands: Set<Command>;
+  readonly serialNumber: Data;
 
   constructor(
     public readonly input: MIDIInput,
     public readonly output: MIDIOutput,
     public readonly info: DeviceInfo,
-
     supportedCommands: Command[]
   ) {
     super(input, output);
     this.supportedCommands = new Set(supportedCommands);
+    this.serialNumber = info.serialNumber;
   }
 
-  get serialNumber() {
+  /** The device's serial number as a human-readable string */
+  get serialNumberString() {
     return formatData(this.info.serialNumber);
   }
 

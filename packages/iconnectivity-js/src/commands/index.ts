@@ -97,7 +97,7 @@ export const sendCommand = async ({
     command,
     data,
     productId,
-    serialNumber,
+    serialNumber: serialNumber ?? device.serialNumber,
     transactionId,
   });
 

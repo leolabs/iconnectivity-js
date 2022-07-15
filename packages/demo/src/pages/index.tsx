@@ -52,7 +52,7 @@ const Component: React.FC = () => {
       ) : devices.length ? (
         <div tw="space-x-4 w-full">
           {devices.map((d) => (
-            <DeviceEntry device={d} key={d.serialNumber} />
+            <DeviceEntry device={d} key={d.serialNumberString} />
           ))}
         </div>
       ) : (
