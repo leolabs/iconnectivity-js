@@ -8,7 +8,11 @@ export interface GetAudioPortMeterValueOptions extends CommandOptions {
   fetchInputs?: boolean;
 }
 
-export interface AudioPortMeterValue {}
+export interface AudioPortMeterValue {
+  portId: number;
+  outputs: MeterValue[];
+  inputs: MeterValue[];
+}
 
 export interface MeterValue {
   channel: number;
@@ -25,7 +29,7 @@ export const getAudioPortMeterValue = async ({
   fetchOutputs,
   fetchInputs,
   ...params
-}: GetAudioPortMeterValueOptions) => {
+}: GetAudioPortMeterValueOptions): Promise<AudioPortMeterValue> => {
   const response = await sendCommand({
     ...params,
     command: AudioCommand.GetAudioPortMeterValue,
@@ -33,7 +37,7 @@ export const getAudioPortMeterValue = async ({
   });
 
   const body = getResponseBody(response);
-  const blockCount = response[3];
+  const blockCount = body[3];
 
   const inputs: MeterValue[] = [];
   const outputs: MeterValue[] = [];
