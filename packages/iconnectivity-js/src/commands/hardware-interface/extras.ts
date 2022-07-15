@@ -47,17 +47,17 @@ export const getAutomaticFailoverState = async (
 
 export interface SetAutomaticFailoverStateParams extends CommandOptions {
   alarm?: boolean;
-  arm?: boolean;
+  armed?: boolean;
 }
 
 /** Sets the state of the device's failover system. */
 export const setAutomaticFailoverState = async ({
   alarm,
-  arm,
+  armed,
   ...params
 }: SetAutomaticFailoverStateParams) => {
-  const valueFlags = makeBitmap(alarm !== undefined, arm !== undefined);
-  const values = makeBitmap(alarm, arm);
+  const valueFlags = makeBitmap(alarm !== undefined, armed !== undefined);
+  const values = makeBitmap(alarm, armed);
   const data = [0x00, valueFlags, values];
 
   await setHardwareValue({
