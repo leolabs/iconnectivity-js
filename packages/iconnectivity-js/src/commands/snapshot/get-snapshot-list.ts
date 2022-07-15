@@ -23,7 +23,6 @@ export interface SnapshotList {
 
 /**
  * This command is used to get information regarding a specific snapshot list.
- *
  */
 export const getSnapshotList = async ({
   snapshotType,
