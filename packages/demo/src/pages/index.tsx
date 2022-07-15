@@ -8,7 +8,6 @@ const Component: React.FC = () => {
   const managerRef = useRef<DeviceManager>();
   const [error, setError] = useState<string>();
   const [devices, setDevices] = useState<Device[]>([]);
-  const [deviceInfo, setDeviceInfo] = useState<any>();
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -41,7 +40,7 @@ const Component: React.FC = () => {
           <b>{error}</b>
         </p>
       ) : devices.length ? (
-        <div>
+        <div tw="mx-auto max-w-4xl space-x-4">
           {devices.map((d) => (
             <DeviceEntry device={d} key={d.serialNumber} />
           ))}
@@ -51,6 +50,10 @@ const Component: React.FC = () => {
           Connect a device to view its details here.
         </p>
       )}
+      <p tw="text-center mt-4 text-gray-400">
+        Made by <a href="https://leolabs.org">Léo Bernard</a> |{" "}
+        <a href="https://github.com/leolabs/iconnectivity-js">GitHub</a>
+      </p>
     </div>
   );
 };
