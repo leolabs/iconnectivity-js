@@ -1,11 +1,11 @@
-import { FC, memo, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import tw, { styled } from "twin.macro";
-import { isEqual } from "lodash";
 import {
   AudioGlobalParm,
   AudioPortMeterValue,
   Device,
   DeviceInfoType,
+  getAllInfo,
   getActiveScene,
   setActiveScene,
   getAudioGlobalParm,
@@ -122,7 +122,7 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
   const [audioInfo, setAudioInfo] = useState<AudioGlobalParm>();
 
   useEffect(() => {
-    device.getAllInfo().then(setInfo);
+    getAllInfo({ device }).then(setInfo);
     getAudioGlobalParm({ device }).then(setAudioInfo);
   }, [device]);
 
