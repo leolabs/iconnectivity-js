@@ -34,6 +34,7 @@ export type Command =
 
 export interface SendCommandOptions extends BodyParameters {
   device: Connectable;
+  debug?: boolean;
 }
 
 export type CommandOptions = Omit<SendCommandOptions, "command" | "data">;
@@ -70,6 +71,7 @@ export const sendCommand = async ({
   serialNumber,
   transactionId = getNextTransactionId(),
   data,
+  debug,
 }: SendCommandOptions) => {
   if (device.supportsCommand && !device.supportsCommand(command)) {
     throw new Error(
@@ -88,7 +90,7 @@ export const sendCommand = async ({
   const message = buildMessage(body);
 
   try {
-    const result = await device.sendMessage(message);
+    const result = await device.sendMessage(message, { command, debug });
 
     if (result[15] === DeviceCommand.ACK) {
       const code = result[20] as ErrorCode;

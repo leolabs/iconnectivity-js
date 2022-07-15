@@ -1,10 +1,15 @@
-import { Command } from "./commands";
+import { Command, getCommandName } from "./commands";
 import { Data, formatData } from "./util/data";
 import { isValidMessage, MESSAGE_HEADER } from "./util/message";
 import { mergeNumber } from "./util/number";
 
+export interface SendMessageOptions {
+  debug?: boolean;
+  command: Command;
+}
+
 export interface Connectable {
-  sendMessage: (message: Data) => Promise<Data>;
+  sendMessage: (message: Data, options: SendMessageOptions) => Promise<Data>;
   supportsCommand?: (command: Command) => boolean;
 }
 
@@ -15,7 +20,7 @@ export class Connection implements Connectable {
   ) {}
 
   /** Sends a message to the device and waits for a response. */
-  sendMessage = async (message: Data) => {
+  sendMessage = async (message: Data, options: SendMessageOptions) => {
     return await new Promise<Uint8Array>((res, rej) => {
       const timeout = setTimeout(() => rej(new Error("Timeout")), 500);
 
@@ -40,11 +45,14 @@ export class Connection implements Connectable {
         clearTimeout(timeout);
         this.input.removeEventListener("midimessage", handler as any);
 
-        console.log({
-          request: formatData(message),
-          response: formatData(m.data),
-          transactionId: mergeNumber(message.slice(12, 14)),
-        });
+        if (options.debug) {
+          console.log({
+            command: getCommandName(options.command),
+            request: formatData(message),
+            response: formatData(m.data),
+            transactionId: mergeNumber(message.slice(12, 14)),
+          });
+        }
       };
 
       this.input.addEventListener("midimessage", handler as any);
