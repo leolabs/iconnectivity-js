@@ -154,6 +154,10 @@ PR.
 - [ ] GetUserData
 - [ ] SetUserData
 
+#### Extras
+
+- `getAllInfo`
+
 ### MIDI Commands
 
 - [ ] GetMIDIInfo
@@ -243,6 +247,11 @@ PR.
 - [x] ApplySnapshot
 - [ ] ApplySnapshotList
 
+#### Extras
+
+- `getActiveScene`
+- `setActiveScene`
+
 ### Hardware Interface Commands
 
 - [ ] GetHardwareGlobalParm
@@ -250,3 +259,8 @@ PR.
 - [ ] SetHardwareParm
 - [x] GetHardwareValue
 - [x] SetHardwareValue
+
+#### Extras
+
+- `getAutomaticFailoverState`
+- `setAutomaticFailoverState`

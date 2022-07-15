@@ -14,5 +14,6 @@ export enum HardwareInterfaceType {
   ToneGenerator = 0x04,
 }
 
+export * from "./extras";
 export * from "./get-hardware-value";
 export * from "./set-hardware-value";

@@ -19,23 +19,3 @@ export const applySnapshot = async ({
     data: [1, snapshotType, snapshotId],
   });
 };
-
-export interface SetActiveSceneOptions extends CommandOptions {
-  scene: 1 | 2;
-}
-
-/**
- * (helper function)
- * Sets the current scene (1 or 2).
- * I've tested this with a PlayAUDIO12.
- */
-export const setActiveScene = async ({
-  scene,
-  ...params
-}: SetActiveSceneOptions) => {
-  await applySnapshot({
-    ...params,
-    snapshotType: SnapshotType.Scene,
-    snapshotId: scene,
-  });
-};

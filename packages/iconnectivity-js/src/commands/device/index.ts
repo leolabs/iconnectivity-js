@@ -37,6 +37,7 @@ export enum DeviceInfoType {
 }
 
 export * from "./ack";
+export * from "./extras";
 export * from "./get-command-list";
 export * from "./get-device";
 export * from "./get-info-list";

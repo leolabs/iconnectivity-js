@@ -1,6 +1,6 @@
+import { SnapshotType } from ".";
 import { testMidiCommand } from "../../util/mock-connection";
-import { applySnapshot } from "./apply-snapshot";
-import { getSnapshotList, SnapshotType } from "./get-snapshot-list";
+import { getSnapshotList } from "./get-snapshot-list";
 
 describe("getSnapshotList", () => {
   it("should correctly call the command and parse the result", async () => {

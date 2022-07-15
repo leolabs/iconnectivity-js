@@ -1,7 +1,6 @@
-import { Product } from "../../types/product";
+import { SnapshotType } from ".";
 import { testMidiCommand } from "../../util/mock-connection";
 import { applySnapshot } from "./apply-snapshot";
-import { SnapshotType } from "./get-snapshot-list";
 
 describe("applySnapshot", () => {
   it("should correctly call the command and parse the result", async () => {
