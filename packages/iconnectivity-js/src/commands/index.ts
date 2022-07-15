@@ -51,6 +51,17 @@ export const getCommandName = (command: Command) =>
   HardwareInterfaceCommand[command] ??
   `Unknown command 0x${command.toString(16)}`;
 
+/**
+ * Support for some commands isn't returned by the GetCommandList command,
+ * but is instead inferred by the support for another command. This map
+ * keeps track of this.
+ */
+export const COMMAND_MAP = new Map<Command, Command>([
+  [SnapshotCommand.ApplySnapshot, SnapshotCommand.GetSnapshotParm],
+  [SnapshotCommand.CreateSnapshot, SnapshotCommand.GetSnapshotParm],
+  [SnapshotCommand.ApplySnapshotList, SnapshotCommand.GetSnapshotList],
+]);
+
 /** The current transaction ID, increases with every sent command. */
 let transactionId = 0;
 
@@ -73,7 +84,10 @@ export const sendCommand = async ({
   data,
   debug,
 }: SendCommandOptions) => {
-  if (device.supportsCommand && !device.supportsCommand(command)) {
+  if (
+    device.supportsCommand &&
+    !device.supportsCommand(COMMAND_MAP.get(command) ?? command)
+  ) {
     throw new Error(
       `Device does not support command ${getCommandName(command)}`
     );

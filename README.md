@@ -237,7 +237,7 @@ PR.
 - [x] GetSnapshotList
 - [ ] SetSnapshotList
 - [ ] CreateSnapshot
-- [ ] ApplySnapshot
+- [x] ApplySnapshot
 - [ ] ApplySnapshotList
 
 ### Hardware Interface Commands

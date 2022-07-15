@@ -10,4 +10,5 @@ export enum SnapshotCommand {
   ApplySnapshotList = 0x6e,
 }
 
+export * from "./apply-snapshot";
 export * from "./get-snapshot-list";
