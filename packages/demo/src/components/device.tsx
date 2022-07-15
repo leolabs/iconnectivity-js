@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import tw, { styled } from "twin.macro";
 import {
   AudioGlobalParm,
@@ -15,7 +15,7 @@ import {
 } from "iconnectivity-js";
 
 const StateButton = styled.button({
-  ...tw`rounded py-1 px-3 cursor-pointer tabular-nums`,
+  ...tw`rounded py-1 px-3 cursor-pointer tabular-nums whitespace-nowrap`,
   ...tw` outline-none transition-shadow focus-visible:ring`,
 
   variants: {
@@ -37,6 +37,63 @@ const StateButton = styled.button({
   },
 });
 
+/** Takes a value and returns the average of the last n values. */
+const useAverage = (value: MeterValue, count: number) => {
+  const lastValues = useRef<number[]>(Array(count).fill(0));
+  const [average, setAverage] = useState(0);
+
+  useEffect(() => {
+    lastValues.current.push(value.valueRaw);
+    lastValues.current.shift();
+    setAverage(lastValues.current.reduce((a, b) => a + b, 0) / count);
+  }, [value]);
+
+  return average;
+};
+
+const Meter: FC<{ value: MeterValue; kind: string }> = ({ value, kind }) => {
+  const average = useAverage(value, 10);
+  const [peak, setPeak] = useState(0);
+  const [displayPeak, setDisplayPeak] = useState(0);
+  const displayPeakDb = 20 * Math.log(displayPeak / 8192);
+
+  useEffect(() => {
+    const highest = Math.max(average, value.valueRaw);
+    setPeak((p) => (highest > p ? highest : p - 50));
+    setDisplayPeak((p) => (highest > p ? highest : p));
+  }, [value]);
+
+  return (
+    <div tw="relative flex-1 bg-gray-700 overflow-hidden text-sm">
+      <span tw="absolute inset-0 pt-1 text-center text-gray-600">
+        {kind} {value.channel}
+      </span>
+      <div
+        tw="absolute bottom-0 w-full transition"
+        css={{
+          backgroundImage: `linear-gradient(to top, green 0%, yellow 80%, red 100%)`,
+          backgroundSize: `100% 16rem`,
+          backgroundPosition: "bottom",
+        }}
+        style={{ height: `${average / 81.92}%` }}
+      />
+      <div
+        tw="absolute w-full bg-gray-400"
+        css={{
+          height: 2,
+          top: `${100 - Math.max(peak, average) / 81.92}%`,
+        }}
+      />
+      <div
+        tw="absolute bottom-0 w-full bg-black bg-opacity-60 tabular-nums text-center cursor-pointer text-xs sm:text-sm"
+        onClick={() => setDisplayPeak(0)}
+      >
+        {displayPeakDb === -Infinity ? "-∞" : displayPeakDb.toFixed(1)}
+      </div>
+    </div>
+  );
+};
+
 const Meters: FC<{ meterValues: MeterValue[]; kind: string }> = ({
   meterValues,
   kind,
@@ -47,16 +104,7 @@ const Meters: FC<{ meterValues: MeterValue[]; kind: string }> = ({
       css={{ flexGrow: meterValues.length }}
     >
       {meterValues.map((ch, i) => (
-        <div tw="relative flex-1 bg-gray-700 overflow-hidden" key={i}>
-          <span tw="absolute inset-0 pt-1 text-center text-gray-600">
-            {kind} {ch.channel}
-          </span>
-          <div
-            tw="absolute bottom-0 w-full bg-green-600 transition"
-            css={{ transitionProperty: "height" }}
-            style={{ height: `${ch.valueRaw / 81.92}%` }}
-          />
-        </div>
+        <Meter key={i} value={ch} kind={kind} />
       ))}
     </div>
   );
@@ -162,7 +210,7 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
 
       {meters &&
         meters.map((channels, i) => (
-          <div key={i} tw="flex gap-4">
+          <div key={i} tw="flex gap-3">
             {channels.inputs.length > 0 && (
               <Meters meterValues={channels.inputs} kind="In" />
             )}
