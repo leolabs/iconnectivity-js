@@ -1,14 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
+import "twin.macro";
 
-import {
-  DeviceManager,
-  Device,
-  Product,
-  getAutomaticFailoverState,
-  getSnapshotList,
-  SnapshotType,
-  getAudioPortMeterValue,
-} from "iconnectivity-js";
+import { DeviceManager, Device } from "iconnectivity-js";
+import { DeviceEntry } from "../components/device";
 
 const Component: React.FC = () => {
   const managerRef = useRef<DeviceManager>();
@@ -39,60 +33,23 @@ const Component: React.FC = () => {
     return () => unsubscribe?.();
   }, []);
 
-  useEffect(() => {
-    Promise.all(
-      devices.map(async (device) => {
-        const info = await device.getAllInfo();
-        const failoverState = await getAutomaticFailoverState({ device });
-        const sceneSnapshot = await getSnapshotList({
-          device,
-          snapshotType: SnapshotType.Scene,
-        });
-        const meterValues = await getAudioPortMeterValue({
-          device,
-          portId: 1,
-          fetchInputs: true,
-          fetchOutputs: true,
-        });
-
-        return {
-          serialNumber: device.serialNumber,
-          info,
-          failoverState,
-          sceneSnapshot,
-          meterValues,
-          supportedCommands: device.getSupportedCommandNames(),
-        };
-      })
-    ).then(setDeviceInfo);
-  }, [devices]);
-
   return (
-    <div>
-      <h2>Devices:</h2>
+    <div tw="p-4">
+      <h2 tw="text-3xl text-center my-10">iConnectivity Devices</h2>
       {error ? (
         <p>
           <b>{error}</b>
         </p>
       ) : devices.length ? (
-        <ul>
+        <div>
           {devices.map((d) => (
-            <li key={d.serialNumber}>
-              <b>{Product[d.info.productId]}</b>:<br />
-              <pre>
-                {JSON.stringify(
-                  deviceInfo.find(
-                    (di: any) => di.serialNumber === d.serialNumber
-                  ),
-                  null,
-                  2
-                )}
-              </pre>
-            </li>
+            <DeviceEntry device={d} key={d.serialNumber} />
           ))}
-        </ul>
+        </div>
       ) : (
-        <p>Connect a device to view its details here</p>
+        <p tw="font-bold text-center">
+          Connect a device to view its details here.
+        </p>
       )}
     </div>
   );
