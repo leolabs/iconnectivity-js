@@ -5,6 +5,8 @@ import {
   AudioPortMeterValue,
   Device,
   DeviceInfoType,
+  getActiveScene,
+  setActiveScene,
   getAudioGlobalParm,
   getAudioPortMeterValue,
   getAutomaticFailoverState,
@@ -131,8 +133,8 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
     }
 
     const interval = setInterval(() => {
-      getSnapshotList({ device, snapshotType: SnapshotType.Scene })
-        .then((s) => setScene(s.lastSnapshotId))
+      getActiveScene({ device })
+        .then((s) => setScene(s))
         .catch(() => {});
 
       getAutomaticFailoverState({ device })
@@ -183,7 +185,13 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
         </h2>
 
         {scene && (
-          <StateButton tw="ml-4" color={scene === 2 ? "red" : "green"}>
+          <StateButton
+            tw="ml-4"
+            color={scene === 2 ? "red" : "green"}
+            onClick={() =>
+              setActiveScene({ device, scene: scene === 1 ? 2 : 1 })
+            }
+          >
             Scene {scene}
           </StateButton>
         )}
