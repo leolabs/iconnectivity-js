@@ -7,6 +7,7 @@ import {
   getAutomaticFailoverState,
   getSnapshotList,
   SnapshotType,
+  getAudioPortMeterValue,
 } from "iconnectivity-js";
 
 const Component: React.FC = () => {
@@ -47,12 +48,19 @@ const Component: React.FC = () => {
           device,
           snapshotType: SnapshotType.Scene,
         });
+        const meterValues = await getAudioPortMeterValue({
+          device,
+          portId: 1,
+          fetchInputs: true,
+          fetchOutputs: true,
+        });
 
         return {
           serialNumber: device.serialNumber,
           info,
           failoverState,
           sceneSnapshot,
+          meterValues,
           supportedCommands: device.getSupportedCommandNames(),
         };
       })
