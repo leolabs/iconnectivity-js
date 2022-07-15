@@ -12,6 +12,10 @@ const Footer = styled.footer({
   },
 });
 
+const Message = styled.div({
+  ...tw`font-bold text-center rounded bg-gray-800 px-6 py-4 mb-4 shadow-md`,
+});
+
 const Component: React.FC = () => {
   const managerRef = useRef<DeviceManager>();
   const [error, setError] = useState<string>();
@@ -41,22 +45,18 @@ const Component: React.FC = () => {
   }, []);
 
   return (
-    <div tw="p-4">
+    <div tw="p-4 flex flex-col items-center mx-auto max-w-4xl">
       <h2 tw="text-3xl text-center my-10">iConnectivity Devices</h2>
       {error ? (
-        <p>
-          <b>{error}</b>
-        </p>
+        <Message tw="bg-red-900">{error}</Message>
       ) : devices.length ? (
-        <div tw="mx-auto max-w-4xl space-x-4">
+        <div tw="space-x-4">
           {devices.map((d) => (
             <DeviceEntry device={d} key={d.serialNumber} />
           ))}
         </div>
       ) : (
-        <p tw="font-bold text-center">
-          Connect a device to view its details here.
-        </p>
+        <Message>Connect a device to view its details here.</Message>
       )}
       <Footer>
         Made by <a href="https://leolabs.org">Léo Bernard</a> |{" "}
