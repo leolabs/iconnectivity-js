@@ -1,6 +1,5 @@
 import isEqual from "lodash/isEqual";
 import uniqBy from "lodash/uniqBy";
-import { getCommandList } from "./commands/device/get-command-list";
 
 import { getDevice } from "./commands/device/get-device";
 import { Connection } from "./connection";
@@ -36,7 +35,7 @@ export class DeviceManager {
     this.handleMidiStateChange();
   }
 
-  handleMidiStateChange = async (e?: Event) => {
+  handleMidiStateChange = async () => {
     const devices = await this.getDevices();
 
     if (
@@ -70,7 +69,9 @@ export class DeviceManager {
             if (deviceInfo) {
               return new Device(input, output, deviceInfo);
             }
-          } catch (e) {}
+          } catch (e) {
+            // fall-through to the null return
+          }
 
           return null;
         })

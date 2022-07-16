@@ -1,5 +1,3 @@
-import { Command, getCommandName } from "./commands";
-import { DeviceCommand } from "./commands/device";
 import { DeviceInfo } from "./commands/device/get-device";
 import { Connection } from "./connection";
 import { Data, formatData } from "./util/data";
