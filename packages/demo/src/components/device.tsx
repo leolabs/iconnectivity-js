@@ -14,6 +14,8 @@ import {
   MeterValue,
   Product,
   setAutomaticFailoverState,
+  AutomaticFailoverState,
+  AudioMidiState,
 } from "iconnectivity-js";
 
 const StateButton = styled.button({
@@ -115,10 +117,7 @@ const Meters: FC<{ meterValues: MeterValue[]; kind: string }> = ({
 export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
   const [info, setInfo] = useState<Record<DeviceInfoType, string>>();
   const [scene, setScene] = useState<number>();
-  const [failoverState, setFailoverState] = useState<{
-    armed: boolean;
-    alarm: boolean;
-  }>();
+  const [failoverState, setFailoverState] = useState<AutomaticFailoverState>();
   const [meters, setMeters] = useState<AudioPortMeterValue[]>();
   const [audioInfo, setAudioInfo] = useState<AudioGlobalParm>();
 
@@ -138,7 +137,7 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
         .catch(() => {});
 
       getAutomaticFailoverState({ device })
-        .then((s) => setFailoverState({ armed: s.armed, alarm: s.alarm }))
+        .then((s) => setFailoverState(s))
         .catch(() => {});
     }, 100);
 
@@ -184,6 +183,38 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
           ({info[DeviceInfoType.SerialNumber] ?? "No Serial Number"})
         </h2>
 
+        {failoverState && (
+          <>
+            <StateButton
+              tw="ml-4"
+              title={AudioMidiState[failoverState.mainAudioState]}
+              color={
+                failoverState.mainAudioState >= AudioMidiState.SendingData
+                  ? "green"
+                  : failoverState.mainAudioState === AudioMidiState.Connected
+                  ? "gray"
+                  : "red"
+              }
+            >
+              Port A
+            </StateButton>
+
+            <StateButton
+              tw="ml-4"
+              title={AudioMidiState[failoverState.backupAudioState]}
+              color={
+                failoverState.backupAudioState >= AudioMidiState.SendingData
+                  ? "green"
+                  : failoverState.backupAudioState === AudioMidiState.Connected
+                  ? "gray"
+                  : "red"
+              }
+            >
+              Port B
+            </StateButton>
+          </>
+        )}
+
         {scene && (
           <StateButton
             tw="ml-4"
@@ -192,7 +223,7 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
               setActiveScene({ device, scene: scene === 1 ? 2 : 1 })
             }
           >
-            Scene {scene}
+            Scene {scene === 1 ? "A" : "B"}
           </StateButton>
         )}
 
