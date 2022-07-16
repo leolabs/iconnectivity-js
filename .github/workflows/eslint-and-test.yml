@@ -6,8 +6,8 @@ on:
   pull_request:
 
 jobs:
-  eslint:
-    name: Run ESLint scanning
+  eslint-resr:
+    name: Run ESLint and Tests
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -22,7 +22,7 @@ jobs:
 
       - name: Run ESLint
         run: |
-          cd packages/iconnectivity-js && npm run test -- \
+          cd packages/iconnectivity-js && npm run lint -- \
           --format @microsoft/eslint-formatter-sarif \
           --output-file eslint-results.sarif
         continue-on-error: true
