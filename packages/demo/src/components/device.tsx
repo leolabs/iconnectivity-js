@@ -212,7 +212,7 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
               } else {
                 setAutomaticFailoverState({
                   device,
-                  arm: !failoverState.armed,
+                  armed: !failoverState.armed,
                 });
               }
             }}
