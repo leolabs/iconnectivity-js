@@ -4,3 +4,6 @@ jest.config.js
 
 *.test.js
 *.test.d.ts
+
+.eslintrc
+.eslintignore
