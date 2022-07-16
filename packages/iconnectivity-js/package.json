@@ -8,6 +8,7 @@
     "url": "https://github.com/leolabs/iconnectivity-js.git"
   },
   "scripts": {
+    "lint": "eslint . --ext .ts",
     "test": "jest",
     "build": "tsc",
     "prepublishOnly": "yarn build"
@@ -17,6 +18,9 @@
   },
   "devDependencies": {
     "@types/jest": "28.1.5",
+    "@typescript-eslint/parser": "5.30.6",
+    "@typescript-eslint/eslint-plugin": "5.30.6",
+    "eslint": "8.19.0",
     "jest": "28.1.3",
     "typescript": "4.7.4",
     "ts-jest": "28.0.5"
