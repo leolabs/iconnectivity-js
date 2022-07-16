@@ -6,6 +6,7 @@ import { mergeNumber } from "./util/number";
 export interface SendMessageOptions {
   debug?: boolean;
   command: Command;
+  transactionId: number;
 }
 
 export interface Connectable {
@@ -36,10 +37,7 @@ export class Connection implements Connectable {
           return;
         }
 
-        if (
-          mergeNumber(m.data.slice(12, 14)) !==
-          mergeNumber(message.slice(12, 14))
-        ) {
+        if (mergeNumber(m.data.slice(12, 14)) !== options.transactionId) {
           return;
         }
 
@@ -50,9 +48,9 @@ export class Connection implements Connectable {
         if (options.debug) {
           console.log({
             command: getCommandName(options.command),
+            transactionId: options.transactionId,
             request: formatData(message),
             response: formatData(m.data),
-            transactionId: mergeNumber(message.slice(12, 14)),
           });
         }
       };

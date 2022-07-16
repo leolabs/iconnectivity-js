@@ -87,7 +87,11 @@ export const sendCommand = async ({
   const message = buildMessage(body);
 
   try {
-    const result = await device.sendMessage(message, { command, debug });
+    const result = await device.sendMessage(message, {
+      command,
+      debug,
+      transactionId,
+    });
 
     if (result[15] === DeviceCommand.ACK) {
       const code = result[20] as ErrorCode;
