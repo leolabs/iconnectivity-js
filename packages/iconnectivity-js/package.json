@@ -17,6 +17,7 @@
     "lodash": "4.17.21"
   },
   "devDependencies": {
+    "@microsoft/eslint-formatter-sarif": "3.0.0",
     "@types/jest": "28.1.5",
     "@typescript-eslint/parser": "5.30.6",
     "@typescript-eslint/eslint-plugin": "5.30.6",
