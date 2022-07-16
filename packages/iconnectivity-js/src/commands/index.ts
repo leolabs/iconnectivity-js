@@ -66,7 +66,12 @@ const getNextTransactionId = () => {
   return transactionId;
 };
 
-/** Sends a message to the given output and waits for a response. */
+/**
+ * Sends a command to the given output and waits for a response
+ * from the input. This function builds a MIDI message based on
+ * the parameters, automatically adding required headers, a
+ * transaction ID, and a checksum.
+ */
 export const sendCommand = async ({
   device,
   command,
