@@ -1,8 +1,8 @@
-name: ESLint
+name: ESLint and Test
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
 
 jobs:
@@ -21,11 +21,9 @@ jobs:
           npm install
 
       - name: Run ESLint
-        run: cd packages/iconnectivity-js && npx eslint .
-          --config .eslintrc.js
-          --ext .js,.jsx,.ts,.tsx
-          --format @microsoft/eslint-formatter-sarif 
-          --output-file eslint-results.sarif
+        run:
+          cd packages/iconnectivity-js && npm run test -- --format
+          @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif
         continue-on-error: true
 
       - name: Upload analysis results to GitHub
@@ -33,6 +31,6 @@ jobs:
         with:
           sarif_file: eslint-results.sarif
           wait-for-processing: true
-          
+
       - name: Run tests
         run: cd packages/iconnectivity-js && npm run test
