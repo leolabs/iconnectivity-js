@@ -26,6 +26,13 @@ export class DeviceManager {
     this.handleMidiStateChange();
   }
 
+  destroy() {
+    this.midiAccess.removeEventListener(
+      "statechange",
+      this.handleMidiStateChange
+    );
+  }
+
   get product() {
     return this._product;
   }

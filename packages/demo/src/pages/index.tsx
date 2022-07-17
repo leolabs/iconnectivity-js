@@ -43,7 +43,10 @@ const Component: React.FC = () => {
       managerRef.current = manager;
     });
 
-    return () => unsubscribe?.();
+    return () => {
+      unsubscribe?.();
+      managerRef.current?.destroy();
+    };
   }, []);
 
   return (
