@@ -16,6 +16,19 @@ export interface Connectable {
   sendMessage: (message: Data, options: SendMessageOptions) => Promise<Data>;
 }
 
+/** Thrown when a message doesn't receive a response within the timeout threshold */
+export class TimeoutError extends Error {
+  constructor(
+    message: string,
+    public readonly commandName: string,
+    public readonly transactionId: number,
+    public readonly request: string
+  ) {
+    super(message);
+    this.name = "TimeoutError";
+  }
+}
+
 export class Connection implements Connectable {
   constructor(
     public readonly input: MIDIInput,
@@ -25,7 +38,17 @@ export class Connection implements Connectable {
   /** Sends a message to the device and waits for a response. */
   sendMessage = async (message: Data, options: SendMessageOptions) => {
     return await new Promise<Uint8Array>((res, rej) => {
-      const timeout = setTimeout(() => rej(new Error("Timeout")), 500);
+      const timeout = setTimeout(() => {
+        const commandName = getCommandName(options.command);
+        rej(
+          new TimeoutError(
+            `Command ${commandName} timed out`,
+            commandName,
+            options.transactionId,
+            formatData(message)
+          )
+        );
+      }, 500);
 
       const handler = (m: MIDIMessageEvent) => {
         if (!m.data.slice(0, 5).every((e, i) => MESSAGE_HEADER[i] === e)) {

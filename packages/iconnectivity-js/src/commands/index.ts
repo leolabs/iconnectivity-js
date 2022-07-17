@@ -91,36 +91,25 @@ export const sendCommand = async ({
 
   const message = buildMessage(body);
 
-  try {
-    const result = await device.sendMessage(message, {
-      command,
-      debug,
-      transactionId,
-    });
+  const result = await device.sendMessage(message, {
+    command,
+    debug,
+    transactionId,
+  });
 
-    if (result[15] === DeviceCommand.ACK) {
-      const code = result[20] as ErrorCode;
+  if (result[15] === DeviceCommand.ACK) {
+    const code = result[20] as ErrorCode;
 
-      if (code !== ErrorCode.NoError) {
-        throw new Error(
-          `Command failed with error code ${formatData([code])} (${
-            ErrorCode[code]
-          })`
-        );
-      }
+    if (code !== ErrorCode.NoError) {
+      throw new Error(
+        `Command failed with error code ${formatData([code])} (${
+          ErrorCode[code]
+        })`
+      );
     }
-
-    return result;
-  } catch (e) {
-    console.error("Sending command failed:", {
-      error: e,
-      command: getCommandName(command),
-      data: formatData(data ?? []),
-      transactionId,
-      message: formatData(message),
-    });
-    throw e;
   }
+
+  return result;
 };
 
 /** Returns the part of the response that contains the data */
