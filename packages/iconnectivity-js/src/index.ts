@@ -1,3 +1,4 @@
+import debounce from "lodash/debounce";
 import isEqual from "lodash/isEqual";
 import uniqBy from "lodash/uniqBy";
 
@@ -42,7 +43,7 @@ export class DeviceManager {
     this.handleMidiStateChange();
   }
 
-  handleMidiStateChange = async () => {
+  handleMidiStateChange = debounce(async () => {
     const devices = await this.getDevices();
 
     if (
@@ -54,7 +55,7 @@ export class DeviceManager {
       this.devices = devices;
       this.devicesChanged.emit(devices);
     }
-  };
+  }, 100);
 
   /** Requests MIDI access and scans all ports for iConnectivity devices */
   async getDevices() {
