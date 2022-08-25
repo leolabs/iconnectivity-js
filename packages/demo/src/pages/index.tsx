@@ -38,13 +38,13 @@ const Component: React.FC = () => {
 
     navigator.requestMIDIAccess({ sysex: true }).then((access) => {
       console.log(
-        "Got MIDI access, available devices:\n",
+        "Got MIDI access, available devices:",
         [...access.outputs.values()]
           .map(
             (o) =>
-              `- ${o.name} (${o.manufacturer}, ${o.state}, ${o.connection})`
+              `\n- ${o.name} (${o.manufacturer}, ${o.state}, ${o.connection})`
           )
-          .join("\n")
+          .join("")
       );
 
       const manager = new DeviceManager(access);
