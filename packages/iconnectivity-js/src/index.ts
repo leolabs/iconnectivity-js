@@ -62,7 +62,8 @@ export class DeviceManager {
     const inputs = [...this.midiAccess.inputs.values()];
     const answers = await Promise.all(
       [...this.midiAccess.outputs.values()]
-        .filter((o) => o.name?.includes("RSV"))
+        .reverse() // We want to use the device's last available port
+        .filter((o) => o.manufacturer === "iConnectivity")
         .map(async (output) => {
           const input = inputs.find((input) => input.name === output.name);
 
