@@ -59,6 +59,12 @@ const Component: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (managerRef.current) {
+      console.log("Detected iConnectivity devices:", devices);
+    }
+  }, [devices]);
+
   return (
     <div tw="p-4 flex flex-col items-center mx-auto max-w-6xl">
       <Head>
