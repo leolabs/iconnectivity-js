@@ -37,6 +37,16 @@ const Component: React.FC = () => {
     let unsubscribe: () => void;
 
     navigator.requestMIDIAccess({ sysex: true }).then((access) => {
+      console.log(
+        "Got MIDI access, available devices:\n",
+        [...access.outputs.values()]
+          .map(
+            (o) =>
+              `- ${o.name} (${o.manufacturer}, ${o.state}, ${o.connection})`
+          )
+          .join("\n")
+      );
+
       const manager = new DeviceManager(access);
       (window as any).deviceManager = manager;
       unsubscribe = manager.devicesChanged.addListener((d) => setDevices(d));
