@@ -63,7 +63,8 @@ export class DeviceManager {
     const answers = await Promise.all(
       [...this.midiAccess.outputs.values()]
         .reverse() // We want to use the device's last available port
-        .filter((o) => o.manufacturer === "iConnectivity")
+        // On Windows, the manufacturer might be empty, so we'll try those too
+        .filter((o) => o.manufacturer === "iConnectivity" || !o.manufacturer)
         .map(async (output) => {
           const input = inputs.find((input) => input.name === output.name);
 
