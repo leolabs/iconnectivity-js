@@ -1,0 +1,23 @@
+Returned by PA1U:
+
+F0 00 01 73 7D // header
+00 11 // product ID
+00 00 00 03 47 // serial
+00 00 00 00 // session ID
+00 00 16 73 // transaction ID
+00 10 // message length (16 bytes)
+43 04 // message class (RetParmVal), data class (HardwareInfo)
+02 // 2 data blocks
+07 04 // block 1, ArgVal
+  02 // 2 value blocks
+  03 // hardware port type
+    06 // type 6?
+  04 // hardware port ID
+    03 // number 3?
+06 03 // block 2, ParmVal
+  01 // 1 value block
+  03 // 3 bytes long
+  44 // parm ID (FailoverDisarmControl)
+  01 // parm value (can be 0 or 1)
+54 // checksum
+F7 // footer

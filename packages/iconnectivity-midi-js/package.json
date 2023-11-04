@@ -1,0 +1,27 @@
+{
+  "name": "iconnectivity-midi-js",
+  "version": "1.1.4",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leolabs/iconnectivity-midi-js.git"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .ts",
+    "test": "vitest",
+    "build": "tsc",
+    "prepublishOnly": "yarn build"
+  },
+  "dependencies": {
+    "lodash": "4.17.21"
+  },
+  "devDependencies": {
+    "@microsoft/eslint-formatter-sarif": "3.0.0",
+    "@typescript-eslint/eslint-plugin": "5.30.6",
+    "@typescript-eslint/parser": "5.30.6",
+    "eslint": "8.19.0",
+    "typescript": "4.7.4",
+    "vitest": "0.34.6"
+  }
+}
