@@ -10,6 +10,7 @@
   "dependencies": {
     "@stitches/react": "1.2.8",
     "iconnectivity-js": "*",
+    "iconnectivity-midi-js": "*",
     "next": "12.2.2",
     "next-transpile-modules": "9.0.0",
     "react": "18.2.0",

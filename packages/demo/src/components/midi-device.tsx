@@ -1,47 +1,30 @@
-import { FC, useEffect, useRef, useState } from "react";
-import tw, { styled } from "twin.macro";
+import { FC, useEffect, useState } from "react";
+import "twin.macro";
 import {
-  AudioGlobalParm,
   AudioPortMeterValue,
   Device,
-  DeviceInfoType,
-  getAllInfo,
-  getActiveScene,
-  setActiveScene,
-  getAudioGlobalParm,
-  getAudioPortMeterValue,
-  getAutomaticFailoverState,
-  Product,
-  setAutomaticFailoverState,
   AutomaticFailoverState,
   AudioMidiState,
-} from "iconnectivity-js";
+  getFailoverInfo,
+  getMeterValues,
+  getDeviceName,
+  setScene,
+} from "iconnectivity-midi-js";
 import { StateButton } from "./state-button";
 import { Meters } from "./meters";
 
-export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
-  const [info, setInfo] = useState<Record<DeviceInfoType, string>>();
-  const [scene, setScene] = useState<number>();
+export const MidiDeviceEntry: FC<{ device: Device }> = ({ device }) => {
+  const [name, setName] = useState<string>();
   const [failoverState, setFailoverState] = useState<AutomaticFailoverState>();
   const [meters, setMeters] = useState<AudioPortMeterValue[]>();
-  const [audioInfo, setAudioInfo] = useState<AudioGlobalParm>();
 
   useEffect(() => {
-    getAllInfo({ device }).then(setInfo);
-    getAudioGlobalParm({ device }).then(setAudioInfo);
+    getDeviceName({ device }).then(setName);
   }, [device]);
 
   useEffect(() => {
-    if (device.info.productId !== Product.PlayAUDIO12) {
-      return;
-    }
-
     const interval = setInterval(() => {
-      getActiveScene({ device })
-        .then((s) => setScene(s))
-        .catch(() => {});
-
-      getAutomaticFailoverState({ device })
+      getFailoverInfo({ device })
         .then((s) => setFailoverState(s))
         .catch(() => {});
     }, 100);
@@ -50,20 +33,14 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
   }, [device]);
 
   useEffect(() => {
-    if (!audioInfo) {
-      return;
-    }
-
     const interval = setInterval(() => {
       Promise.all(
-        Array(audioInfo.audioPortCount)
+        Array(2)
           .fill(0)
           .map(async (_, i) =>
-            getAudioPortMeterValue({
+            getMeterValues({
               device,
               portId: i + 1,
-              fetchInputs: true,
-              fetchOutputs: true,
             })
           )
       )
@@ -72,9 +49,9 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
     }, 50);
 
     return () => clearInterval(interval);
-  }, [device, audioInfo]);
+  }, [device]);
 
-  if (!info) {
+  if (!name || !failoverState) {
     return null;
   }
 
@@ -82,10 +59,8 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
     <div tw="bg-gray-800 rounded-md shadow-md p-4">
       <div tw="flex items-center">
         <h2 tw="text-lg mr-auto">
-          <span tw="font-bold">
-            {info[DeviceInfoType.DeviceName] ?? "Unnamed"}
-          </span>{" "}
-          ({info[DeviceInfoType.SerialNumber] ?? "No Serial Number"})
+          <span tw="font-bold">{name ?? "Unnamed"}</span> (
+          {device.serialNumberString ?? "No Serial Number"})
         </h2>
 
         {failoverState && (
@@ -120,15 +95,15 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
           </>
         )}
 
-        {scene && (
+        {failoverState.scene && (
           <StateButton
             tw="ml-4"
-            color={scene === 2 ? "red" : "green"}
+            color={failoverState.scene === 2 ? "red" : "green"}
             onClick={() =>
-              setActiveScene({ device, scene: scene === 1 ? 2 : 1 })
+              setScene({ device, scene: failoverState.scene === 1 ? 2 : 1 })
             }
           >
-            Scene {scene === 1 ? "A" : "B"}
+            Scene {failoverState.scene === 1 ? "A" : "B"}
           </StateButton>
         )}
 
@@ -142,16 +117,6 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
                 ? "green"
                 : "gray"
             }
-            onClick={() => {
-              if (failoverState.alarm) {
-                setAutomaticFailoverState({ device, alarm: false });
-              } else {
-                setAutomaticFailoverState({
-                  device,
-                  armed: !failoverState.armed,
-                });
-              }
-            }}
           >
             {failoverState.alarm
               ? "Alarm"
@@ -165,9 +130,6 @@ export const DeviceEntry: FC<{ device: Device }> = ({ device }) => {
       {meters &&
         meters.map((channels, i) => (
           <div key={i} tw="flex gap-3">
-            {channels.inputs.length > 0 && (
-              <Meters meterValues={channels.inputs} kind="In" />
-            )}
             {channels.outputs.length > 0 && (
               <Meters meterValues={channels.outputs} kind="Out" />
             )}

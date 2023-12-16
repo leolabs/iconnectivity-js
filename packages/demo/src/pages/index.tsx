@@ -2,8 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import tw, { styled } from "twin.macro";
 
 import { DeviceManager, Device } from "iconnectivity-js";
+import {
+  DeviceManager as MidiDeviceManager,
+  Device as MidiDevice,
+  Product,
+} from "iconnectivity-midi-js";
 import { DeviceEntry } from "../components/device";
 import Head from "next/head";
+import { MidiDeviceEntry } from "../components/midi-device";
 
 const Footer = styled.footer({
   ...tw`mt-4 text-gray-400 text-center`,
@@ -19,8 +25,10 @@ const Message = styled.div({
 
 const Component: React.FC = () => {
   const managerRef = useRef<DeviceManager>();
+  const midiManagerRef = useRef<MidiDeviceManager>();
   const [error, setError] = useState<string>();
   const [devices, setDevices] = useState<Device[]>([]);
+  const [midiDevices, setMidiDevices] = useState<MidiDevice[]>([]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -35,6 +43,7 @@ const Component: React.FC = () => {
     }
 
     let unsubscribe: () => void;
+    let midiUnsubscribe: () => void;
 
     navigator.requestMIDIAccess({ sysex: true }).then((access) => {
       console.log(
@@ -49,8 +58,15 @@ const Component: React.FC = () => {
 
       const manager = new DeviceManager(access);
       (window as any).deviceManager = manager;
-      unsubscribe = manager.devicesChanged.addListener((d) => setDevices(d));
       managerRef.current = manager;
+      unsubscribe = manager.devicesChanged.addListener((d) => setDevices(d));
+
+      const midiManager = new MidiDeviceManager(access, Product.PlayAUDIO1U);
+      (window as any).midiDeviceManager = midiManager;
+      midiManagerRef.current = midiManager;
+      midiUnsubscribe = midiManager.devicesChanged.addListener((d) =>
+        setMidiDevices(d)
+      );
     });
 
     return () => {
@@ -81,7 +97,11 @@ const Component: React.FC = () => {
       {error ? (
         <Message tw="bg-red-900">{error}</Message>
       ) : devices.length ? (
-        <div tw="space-x-4 w-full">
+        <div tw="space-y-4 w-full">
+          {midiDevices.map((d) => (
+            <MidiDeviceEntry device={d} key={d.serialNumberString} />
+          ))}
+
           {devices.map((d) => (
             <DeviceEntry device={d} key={d.serialNumberString} />
           ))}
