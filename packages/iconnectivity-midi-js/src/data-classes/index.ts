@@ -1,3 +1,15 @@
+import { AudioAutomationInfo } from "./audio-automation-info";
+import { AudioInfo } from "./audio-info";
+import { AudioPortInfo } from "./audio-port-info";
+import { BulkData } from "./bulk-data";
+import { DeviceFeature } from "./device-feature";
+import { DeviceInfo } from "./device-info";
+import { HardwareInfo } from "./hardware-info";
+import { MIDIFeature } from "./midi-feature";
+import { MIDIInfo } from "./midi-info";
+import { MIDIPortInfo } from "./midi-port-info";
+import { SessionInfo } from "./session-info";
+
 export enum DataClassType {
   /** Placeholder value for messages that don’t require a data class. */
   Null = 0x00,
@@ -26,3 +38,30 @@ export enum DataClassType {
   /** Used to perform bulk data transfer operations. */
   BulkData = 0x70,
 }
+
+export type DataClassMap = {
+  [DataClassType.SessionInfo]: SessionInfo;
+  [DataClassType.DeviceInfo]: DeviceInfo;
+  [DataClassType.DeviceFeature]: DeviceFeature;
+  [DataClassType.HardwareInfo]: HardwareInfo;
+  [DataClassType.MidiInfo]: MIDIInfo;
+  [DataClassType.MidiPortInfo]: MIDIPortInfo;
+  [DataClassType.MidiFeature]: MIDIFeature;
+  [DataClassType.AudioInfo]: AudioInfo;
+  [DataClassType.AudioPortInfo]: AudioPortInfo;
+  [DataClassType.AudioAutomationInfo]: AudioAutomationInfo;
+  [DataClassType.BulkData]: BulkData;
+};
+
+export * from "./audio-automation-info";
+export * from "./audio-channel-info";
+export * from "./audio-info";
+export * from "./audio-port-info";
+export * from "./bulk-data";
+export * from "./device-feature";
+export * from "./device-info";
+export * from "./hardware-info";
+export * from "./midi-feature";
+export * from "./midi-info";
+export * from "./midi-port-info";
+export * from "./session-info";

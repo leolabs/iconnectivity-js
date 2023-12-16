@@ -1,11 +1,12 @@
-import { Command, getCommandName } from "./commands";
+import { MessageClass } from "./messages";
+import { getMessageName } from "./send-message";
 import { Data, formatData } from "./util/data";
 import { isValidMessage, MESSAGE_HEADER } from "./util/message";
 import { mergeNumber } from "./util/number";
 
 export interface SendMessageOptions {
   debug?: boolean;
-  command: Command;
+  messageClass: MessageClass;
   transactionId: number;
 }
 
@@ -39,7 +40,7 @@ export class Connection implements Connectable {
   sendMessage = async (message: Data, options: SendMessageOptions) => {
     return await new Promise<Uint8Array>((res, rej) => {
       const timeout = setTimeout(() => {
-        const commandName = getCommandName(options.command);
+        const commandName = getMessageName(options.messageClass);
         rej(
           new TimeoutError(
             `Command ${commandName} timed out`,
@@ -60,7 +61,7 @@ export class Connection implements Connectable {
           return;
         }
 
-        if (mergeNumber(m.data.slice(12, 14)) !== options.transactionId) {
+        if (mergeNumber(m.data.slice(18, 20)) !== options.transactionId) {
           return;
         }
 
@@ -70,7 +71,7 @@ export class Connection implements Connectable {
 
         if (options.debug) {
           console.log({
-            command: getCommandName(options.command),
+            command: getMessageName(options.messageClass),
             transactionId: options.transactionId,
             request: formatData(message),
             response: formatData(m.data),

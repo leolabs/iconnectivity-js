@@ -6,8 +6,8 @@ import { OneOrMore, assertOneOrMore } from "../util/array";
 import { parseDataBlock } from "../data-blocks/parse-data-block";
 
 /**
- * RetParmVal messages are sent from a device to a host in response
- * to a GetParmVal message (return parameter values from a device).
+ * BulkTransfer messages are sent between a device and a host (or another device)
+ * to perform bulk data transfer operations (i.e. backup and restore).
  */
 export class BulkTransfer extends Message {
   type = MessageClass.BulkTransfer;

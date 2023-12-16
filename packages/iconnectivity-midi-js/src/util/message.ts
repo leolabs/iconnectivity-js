@@ -1,4 +1,4 @@
-import { Command } from "../commands";
+import { Message } from "../messages";
 import { Product } from "../types/product";
 import { Data } from "./data";
 import { splitNumber } from "./number";
@@ -37,32 +37,35 @@ export const MESSAGE_HEADER = [0xf0, 0x00, 0x01, 0x73, 0x7d];
 const buildChecksum = (sum: number) => ((~sum + 1) >>> 0) % 128;
 
 export interface BodyParameters {
-  command: Command;
+  message: Message;
   productId?: Product | Data;
   serialNumber?: Data;
-  transactionId?: number;
-  data?: Data;
+  sessionId?: readonly [number, number, number, number];
+  transactionId: number;
 }
 
 /** Builds the message body from the given parameters. */
 export const buildBody = ({
-  command,
+  message,
   productId,
   serialNumber,
+  sessionId,
   transactionId,
-  data,
 }: BodyParameters) => {
   if (typeof productId === "number") {
     productId = splitNumber(productId);
   }
 
+  const msgData = message.toData();
+
   return [
     ...(productId ?? [0, 0]), // product ID, if set
     ...(serialNumber ?? [0, 0, 0, 0, 0]), // serial number, if set
-    ...splitNumber(transactionId ?? 0), // transaction ID
-    command, // flags and command
-    ...splitNumber(data?.length ?? 0), // data length, max 16383
-    ...(data ?? []), // command data
+    ...(sessionId ?? [0, 0, 0, 0]), // session ID, if set
+    ...[0, 0], // transaction ID padding
+    ...splitNumber(transactionId), // transaction ID
+    ...splitNumber(msgData.length), // message length
+    ...msgData, // message data
   ];
 };
 

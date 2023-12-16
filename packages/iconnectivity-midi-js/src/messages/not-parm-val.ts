@@ -3,7 +3,7 @@ import { Data, parseBlocksFromData } from "../util";
 import { DataBlockType } from "../data-blocks";
 import { ArgVal } from "../data-blocks/arg-val";
 import { ParmVal } from "../data-blocks/parm-val";
-import { DataClassType } from "../data-classes";
+import { DataClassMap, DataClassType } from "../data-classes";
 import { OneOrMore, assertOneOrMore, isTruthy } from "../util/array";
 
 /**
@@ -11,13 +11,13 @@ import { OneOrMore, assertOneOrMore, isTruthy } from "../util/array";
  * that the host did not initiate, but only if the host has registered for automatic updates using
  * the Notification command.
  */
-export class NotParmVal extends Message {
+export class NotParmVal<T extends keyof DataClassMap> extends Message {
   type = MessageClass.NotParmVal;
 
   constructor(
     public dataClass: DataClassType,
     public argVal: ArgVal | null,
-    public parmVals: OneOrMore<ParmVal>
+    public parmVals: OneOrMore<ParmVal<T>>
   ) {
     super();
   }

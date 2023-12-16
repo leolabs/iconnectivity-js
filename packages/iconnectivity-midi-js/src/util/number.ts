@@ -33,3 +33,8 @@ export const mergeNumber = (input: Data) => {
 export const getBit = (input: number, bitPosition: number) => {
   return (input & (1 << bitPosition)) === 0 ? 0 : 1;
 };
+
+/** Returns a random 7-bit number (0-127) */
+export const random7bit = () => {
+  return Math.floor(Math.random() * 128);
+};

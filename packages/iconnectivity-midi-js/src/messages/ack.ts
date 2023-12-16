@@ -62,10 +62,14 @@ export class Ack extends Message {
   }
 
   static fromData(data: Data) {
-    const bytes = data.slice(2);
+    const bytes = data.slice(3);
 
     if (bytes.length !== 3) {
-      throw new Error("Ack message needs to be 3 bytes long");
+      throw new Error(
+        "Ack message needs to be 3 bytes long, but is " +
+          bytes.length +
+          " bytes long"
+      );
     }
 
     return new Ack(bytes[0], bytes[1], bytes[2]);

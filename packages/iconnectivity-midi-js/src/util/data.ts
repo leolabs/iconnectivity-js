@@ -47,3 +47,8 @@ export const parseBlocksFromData = <T>(
 
   return blocks;
 };
+
+/** Converts a given array of char codes into a string */
+export const dataToAscii = (input: Data) => {
+  return [...input].map((c) => String.fromCharCode(c)).join("");
+};
