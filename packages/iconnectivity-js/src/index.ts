@@ -17,7 +17,7 @@ import { createEventSource } from "./util/event-source";
  * You can obtain it by calling `navigator.requestMIDIAccess({ sysex: true })`.
  */
 export class DeviceManager {
-  private devices: Device[] = [];
+  private _devices: Device[] = [];
   readonly devicesChanged = createEventSource<(devices: Device[]) => void>();
   private _product: Product | undefined;
 
@@ -32,6 +32,10 @@ export class DeviceManager {
       "statechange",
       this.handleMidiStateChange
     );
+  }
+
+  get devices(): readonly Device[] {
+    return this._devices;
   }
 
   get product() {
@@ -49,10 +53,10 @@ export class DeviceManager {
     if (
       !isEqual(
         devices.map((d) => d.serialNumber),
-        this.devices.map((d) => d.serialNumber)
+        this._devices.map((d) => d.serialNumber)
       )
     ) {
-      this.devices = devices;
+      this._devices = devices;
       this.devicesChanged.emit(devices);
     }
   }, 100);
@@ -100,8 +104,8 @@ export class DeviceManager {
    * If devices are already found, this returns immediately.
    */
   async waitForDevices() {
-    if (this.devices.length) {
-      return this.devices;
+    if (this._devices.length) {
+      return this._devices;
     } else {
       return new Promise((resolve) => {
         const unsubscribe = this.devicesChanged.addListener((devices) => {
