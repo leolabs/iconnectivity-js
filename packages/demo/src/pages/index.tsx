@@ -96,7 +96,7 @@ const Component: React.FC = () => {
       <h2 tw="text-3xl text-center my-10">iConnectivity Devices</h2>
       {error ? (
         <Message tw="bg-red-900">{error}</Message>
-      ) : devices.length ? (
+      ) : devices.length || midiDevices.length ? (
         <div tw="space-y-4 w-full">
           {midiDevices.map((d) => (
             <MidiDeviceEntry device={d} key={d.serialNumberString} />
