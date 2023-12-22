@@ -8,6 +8,7 @@ import {
   getFailoverInfo,
   getMeterValues,
   getDeviceName,
+  setAlarmStatus,
   setScene,
 } from "iconnectivity-midi-js";
 import { StateButton } from "./state-button";
@@ -99,9 +100,10 @@ export const MidiDeviceEntry: FC<{ device: Device }> = ({ device }) => {
           <StateButton
             tw="ml-4"
             color={failoverState.scene === 2 ? "red" : "green"}
-            onClick={() =>
-              setScene({ device, scene: failoverState.scene === 1 ? 2 : 1 })
-            }
+            onClick={() => {
+              setScene({ device, scene: failoverState.scene === 1 ? 2 : 1 });
+              setAlarmStatus({ device, alarmStatus: false });
+            }}
           >
             Scene {failoverState.scene === 1 ? "A" : "B"}
           </StateButton>
