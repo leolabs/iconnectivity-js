@@ -49,6 +49,5 @@ export const setParmVal = async <T extends keyof DataClassMap, V = ParmVal<T>>({
   });
 
   const body = getResponseBody(res);
-  console.log({ body });
   return Ack.fromData(body);
 };
