@@ -8,6 +8,8 @@ import { Product } from "./types/product";
 import { isTruthy } from "./util/array";
 import { createEventSource } from "./util/event-source";
 import { discoverDevice } from "./functions";
+import { getOpMode } from "./functions/get-opmode";
+import { OpMode } from "./data-classes";
 
 /**
  * The DeviceManager is responsible for discovering and managing iConnectivity
@@ -64,6 +66,7 @@ export class DeviceManager {
   /** Requests MIDI access and scans all ports for iConnectivity devices */
   async getDevices() {
     const inputs = [...this.midiAccess.inputs.values()];
+
     const answers = await Promise.all(
       [...this.midiAccess.outputs.values()]
         .reverse() // We want to use the device's last available port
@@ -77,16 +80,33 @@ export class DeviceManager {
           }
 
           try {
+            // Explicitly try to open the device's MIDI ports
+            await input.open();
+            await output.open();
+
             const device = new Connection(input, output);
             const serial = await discoverDevice({
               device,
               productId: this._product,
             });
 
-            if (serial) {
-              return new Device(input, output, serial);
+            if (!serial) {
+              return null;
             }
+
+            const opMode = await getOpMode({ device });
+
+            // Ignore devices in Bootloader mode
+            if (opMode === OpMode.Bootloader) {
+              return null;
+            }
+
+            return new Device(input, output, serial);
           } catch (e) {
+            console.warn(
+              `Couldn't connect to ${output.name} because of error:`,
+              e
+            );
             // fall-through to the null return
           }
 
@@ -98,6 +118,18 @@ export class DeviceManager {
       answers.filter(isTruthy),
       (d) => d.serialNumberString
     );
+
+    // Close MIDI ports of unused devices
+    for (const output of this.midiAccess.outputs.values()) {
+      const input = inputs.find((input) => input.name === output.name);
+
+      if (!input || devices.some((d) => d.output.id === output.id)) {
+        continue;
+      }
+
+      await input.close();
+      await output.close();
+    }
 
     return devices;
   }

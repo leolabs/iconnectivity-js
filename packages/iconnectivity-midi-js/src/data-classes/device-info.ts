@@ -193,3 +193,8 @@ export enum DeviceInfo {
    */
   DisplayTimeout = 0x45,
 }
+
+export enum OpMode {
+  Bootloader = 0,
+  Application = 1,
+}

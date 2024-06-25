@@ -77,6 +77,10 @@ export class DeviceManager {
           }
 
           try {
+            // Explicitly try to open the device's MIDI ports
+            await input.open();
+            await output.open();
+
             const device = new Connection(input, output);
             const deviceInfo = await getDevice({ device });
 
@@ -95,6 +99,18 @@ export class DeviceManager {
       answers.filter(isTruthy),
       (d) => d.serialNumberString
     );
+
+    // Close MIDI ports of unused devices
+    for (const output of this.midiAccess.outputs.values()) {
+      const input = inputs.find((input) => input.name === output.name);
+
+      if (!input || devices.some((d) => d.output.id === output.id)) {
+        continue;
+      }
+
+      await input.close();
+      await output.close();
+    }
 
     return devices;
   }
