@@ -2,3 +2,4 @@ node_modules/
 lib/
 .next/
 out/
+.vscode/
