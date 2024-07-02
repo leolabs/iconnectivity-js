@@ -20,6 +20,7 @@ import { OpMode } from "./data-classes";
  */
 export class DeviceManager {
   private _devices: Device[] = [];
+  private _midiInputIds: string[] = [];
   readonly devicesChanged = createEventSource<(devices: Device[]) => void>();
   private _product: Product | undefined;
 
@@ -50,6 +51,13 @@ export class DeviceManager {
   }
 
   handleMidiStateChange = debounce(async () => {
+    const inputIds = [...this.midiAccess.inputs.values()].map((i) => i.id);
+
+    if (isEqual(this._midiInputIds, inputIds)) {
+      return;
+    }
+
+    this._midiInputIds = inputIds;
     const devices = await this.getDevices();
 
     if (
