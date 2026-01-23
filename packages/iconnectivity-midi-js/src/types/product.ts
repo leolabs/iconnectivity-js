@@ -3,4 +3,5 @@ export enum Product {
   MioXM = 0x000f,
   MioXC = 0x0010,
   PlayAUDIO1U = 0x0011,
+  PlayAUDIO2U = 0x0012,
 }

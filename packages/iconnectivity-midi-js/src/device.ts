@@ -1,4 +1,5 @@
 import { Connection } from "./connection";
+import { Product } from "./types";
 import { Data, formatData } from "./util/data";
 
 /** Represents an iConnectivity device with a MIDI input and output */
@@ -6,6 +7,7 @@ export class Device extends Connection {
   constructor(
     public readonly input: MIDIInput,
     public readonly output: MIDIOutput,
+    public readonly productId: Product,
     public readonly serialNumber: Data
   ) {
     super(input, output);

@@ -93,12 +93,12 @@ export class DeviceManager {
             await output.open();
 
             const device = new Connection(input, output);
-            const serial = await discoverDevice({
+            const { productId, serial } = await discoverDevice({
               device,
               productId: this._product,
             });
 
-            if (!serial) {
+            if (!productId || !serial) {
               return null;
             }
 
@@ -109,7 +109,7 @@ export class DeviceManager {
               return null;
             }
 
-            return new Device(input, output, serial);
+            return new Device(input, output, productId, serial);
           } catch (e) {
             console.warn(
               `Couldn't connect to ${output.name} because of error:`,

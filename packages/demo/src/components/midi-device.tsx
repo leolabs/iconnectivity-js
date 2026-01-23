@@ -61,7 +61,7 @@ export const MidiDeviceEntry: FC<{ device: Device }> = ({ device }) => {
       <div tw="flex items-center">
         <h2 tw="text-lg mr-auto">
           <span tw="font-bold">{name ?? "Unnamed"}</span> (
-          {device.serialNumberString ?? "No Serial Number"})
+          {device.serialNumberString ?? "No Serial Number"}, {device.productId})
         </h2>
 
         {failoverState && (

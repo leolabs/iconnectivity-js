@@ -1,7 +1,7 @@
 import { ParmVal } from "../data-blocks/parm-val";
 import { HstSesnVal } from "../messages/hst-sesn-val";
 import { MessageOptions, sendMessage } from "../send-message";
-import { splitNumber } from "../util";
+import { splitNumber, mergeNumber } from "../util";
 
 export const discoverDevice = async (params: MessageOptions) => {
   const deviceInfo = await sendMessage({
@@ -11,11 +11,12 @@ export const discoverDevice = async (params: MessageOptions) => {
     ]),
   });
 
+  const productId = mergeNumber(deviceInfo.slice(5, 7));
   const serial = deviceInfo.slice(7, 12);
 
   if (serial.length !== 5) {
     throw new Error("Serial isn't in a correct format");
   }
 
-  return serial;
+  return { productId, serial };
 };
